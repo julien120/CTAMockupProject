@@ -96,6 +96,12 @@ public class GameManager : MonoBehaviour
                     cells[i * 4 + j].SetText(_stageState[i, j]);
                 }
             }
+
+            if (IsGameOver(_stageState))
+            {
+                PlayerPrefs.SetInt("SCORE", score);
+                LoadResultScene();
+            }
         }
     }
     
