@@ -205,9 +205,9 @@ public class GameManager : MonoBehaviour
     private bool IsGameOver(int[,] stageState)
     {
         // 空いている場所があればゲームオーバーにはならない
-        for (var i = 0; i < stageState.Length; i++)
+        for (var i = 0; i < stageState.GetLength(0); i++)
         {
-            for (var j = 0; j < stageState.Length; j++)
+            for (var j = 0; j < stageState.GetLength(0); j++)
             {
                 if (stageState[i, j] <= 0)
                 {
@@ -217,9 +217,9 @@ public class GameManager : MonoBehaviour
         }
 
         // 合成可能なマスが一つでもあればゲームオーバーにはならない
-        for (var i = 0; i < stageState.Length; i++)
+        for (var i = 0; i < stageState.GetLength(0); i++)
         {
-            for (var j = 0; j < stageState.Length; j++)
+            for (var j = 0; j < stageState.GetLength(0); j++)
             {
                 var state = stageState[i, j];
                 var canMerge = false;
@@ -228,7 +228,7 @@ public class GameManager : MonoBehaviour
                     canMerge |= state == stageState[i - 1, j];
                 }
 
-                if (i < stageState.Length - 1)
+                if (i < stageState.GetLength(0) - 1)
                 {
                     canMerge |= state == stageState[i + 1, j];
                 }
@@ -238,7 +238,7 @@ public class GameManager : MonoBehaviour
                     canMerge |= state == stageState[i, j - 1];
                 }
 
-                if (j < stageState.Length - 1)
+                if (j < stageState.GetLength(0) - 1)
                 {
                     canMerge |= state == stageState[i, j + 1];
                 }
