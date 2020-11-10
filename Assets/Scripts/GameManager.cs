@@ -137,14 +137,19 @@ public class GameManager : MonoBehaviour
     private void Move(int row, int column, int horizontal, int vertical)
     {
         // 4x4境界線チェック
+        // 再起呼び出し以降も毎回境界線チェックはするため冒頭で呼び出しておく
         if (BorderCheck(row, column, horizontal, vertical) == false)
         {
             return;
         }
+        // 移動先の位置を計算
         var nextRow = row + vertical;
         var nextCol = column + horizontal;
+        
+        // 移動元と移動先の値を取得
         var value = _stageState[row, column];
         var nextValue = _stageState[nextRow, nextCol];
+        
         // 次の移動先のマスが0の場合は移動する
         if (nextValue == 0)
         {
