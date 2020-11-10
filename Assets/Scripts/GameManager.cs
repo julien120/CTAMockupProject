@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -9,6 +7,8 @@ public class GameManager : MonoBehaviour
     private readonly int[,] _stageState = new int[4, 4];
 
     private bool isDirty;
+
+    private int score;
 
     private void Start()
     {
@@ -159,6 +159,7 @@ public class GameManager : MonoBehaviour
         {
             _stageState[row, column] = 0;
             _stageState[nextRow, nextCol] = value * 2;
+            score += value * 2;
         }
         // 異なる値のときは移動処理を終了
         else if (value != nextValue)
