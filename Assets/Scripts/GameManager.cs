@@ -6,6 +6,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Cell[] cells;
     private readonly int[,] _stageState = new int[4, 4];
 
+    /// <summary>
+    /// 盤面の再描画を行う必要があるかのフラグ
+    /// </summary>
     private bool isDirty;
 
     private int score;
