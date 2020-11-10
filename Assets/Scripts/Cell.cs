@@ -10,7 +10,7 @@ public class Cell : MonoBehaviour
     public void SetText(int num)
     {
         text.text = num.ToString();
-        image.enabled = num != 0;
+        gameObject.SetActive(num != 0);
         // TODO: 色が濃くなるロジックを考える
         image.color = Color.HSVToRGB(1f, 1f, 1f);
     }
