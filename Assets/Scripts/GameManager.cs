@@ -1,9 +1,11 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
     [SerializeField] private Cell[] cells;
+    [SerializeField] private Text scoreText;
     private readonly int[,] _stageState = new int[4, 4];
 
     /// <summary>
@@ -174,6 +176,7 @@ public class GameManager : MonoBehaviour
             _stageState[row, column] = 0;
             _stageState[nextRow, nextCol] = value * 2;
             score += value * 2;
+            scoreText.text = $"Score: {score}";
         }
         // 異なる値のときは移動処理を終了
         else if (value != nextValue)
