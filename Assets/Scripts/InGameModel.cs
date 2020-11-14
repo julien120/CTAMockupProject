@@ -1,19 +1,22 @@
-using UnityEngine;
-using UnityEngine.SceneManagement;
+﻿using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+using System;
 
-public class GameManager : MonoBehaviour
+public class InGameModel : MonoBehaviour
 {
     [SerializeField] private Cell[] cells;
-    [SerializeField] private Text scoreText;
     private readonly int[,] _stageState = new int[4, 4];
+
 
     /// <summary>
     /// 盤面の再描画を行う必要があるかのフラグ
     /// </summary>
     private bool isDirty;
 
+
     private int score;
+    public event Action<int> changedScore;
 
     private void Start()
     {
@@ -25,11 +28,11 @@ public class GameManager : MonoBehaviour
                 _stageState[i, j] = 0;
             }
         }
-        var posA = new Vector2(Random.Range(0, 4), Random.Range(0, 4));
-        var posB = new Vector2((posA.x + Random.Range(1, 3)) % 4, (posA.y + Random.Range(1, 3))% 4);
+        var posA = new Vector2(UnityEngine.Random.Range(0, 4), UnityEngine.Random.Range(0, 4));
+        var posB = new Vector2((posA.x + UnityEngine.Random.Range(1, 3)) % 4, (posA.y + UnityEngine.Random.Range(1, 3)) % 4);
         _stageState[(int)posA.x, (int)posA.y] = 2;
-        _stageState[(int) posB.x, (int) posB.y] = Random.Range(0, 1.0f) < 0.5f ? 2 : 4;
-        
+        _stageState[(int)posB.x, (int)posB.y] = UnityEngine.Random.Range(0, 1.0f) < 0.5f ? 2 : 4;
+
         // ステージの初期状態をViewに反映
         for (var i = 0; i < 4; i++)
         {
@@ -40,51 +43,15 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void Update()
+    public void InputRight()
     {
         isDirty = false;
-        // 入力検知
-        if (Input.GetKeyDown(KeyCode.RightArrow))
-        {
-            for (var col = 4; col >= 0; col--)
-            {
-                for (var row = 0; row < 4; row++)
-                {
-                    Check(row, col, 1, 0);
-                }
-            }
-        }
 
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        for (var col = 4; col >= 0; col--)
         {
             for (var row = 0; row < 4; row++)
             {
-                for (var col = 0; col < 4; col++)
-                {
-                    Check(row, col, -1, 0);
-                }
-            }
-        }
-
-        if (Input.GetKeyDown(KeyCode.UpArrow))
-        {
-            for (var row = 0; row < 4; row++)
-            {
-                for (var col = 0; col < 4; col++)
-                {
-                    Check(row, col, 0, -1);
-                }
-            }
-        }
-
-        if (Input.GetKeyDown(KeyCode.DownArrow))
-        {
-            for (var row = 4; row >= 0; row--)
-            {
-                for (var col = 0; col < 4; col++)
-                {
-                    Check(row, col, 0, 1);
-                }
+                Check(row, col, 1, 0);
             }
         }
 
@@ -105,7 +72,105 @@ public class GameManager : MonoBehaviour
                 LoadResultScene();
             }
         }
+
     }
+
+    public void InputLeft()
+    {
+        isDirty = false;
+
+        for (var row = 0; row < 4; row++)
+        {
+            for (var col = 0; col < 4; col++)
+            {
+                Check(row, col, -1, 0);
+            }
+        }
+
+        if (isDirty)
+        {
+            CreateNewRandomCell();
+            for (var i = 0; i < 4; i++)
+            {
+                for (var j = 0; j < 4; j++)
+                {
+                    cells[i * 4 + j].SetText(_stageState[i, j]);
+                }
+            }
+
+            if (IsGameOver(_stageState))
+            {
+                PlayerPrefs.SetInt("SCORE", score);
+                LoadResultScene();
+            }
+        }
+
+    }
+
+    public void InputUp()
+    {
+        isDirty = false;
+
+        for (var row = 0; row < 4; row++)
+        {
+            for (var col = 0; col < 4; col++)
+            {
+                Check(row, col, 0, -1);
+            }
+        }
+
+        if (isDirty)
+        {
+            CreateNewRandomCell();
+            for (var i = 0; i < 4; i++)
+            {
+                for (var j = 0; j < 4; j++)
+                {
+                    cells[i * 4 + j].SetText(_stageState[i, j]);
+                }
+            }
+
+            if (IsGameOver(_stageState))
+            {
+                PlayerPrefs.SetInt("SCORE", score);
+                LoadResultScene();
+            }
+        }
+
+    }
+
+    public void InputDown()
+    {
+        isDirty = false;
+
+        for (var row = 4; row >= 0; row--)
+        {
+            for (var col = 0; col < 4; col++)
+            {
+                Check(row, col, 0, 1);
+            }
+        }
+
+        if (isDirty)
+        {
+            CreateNewRandomCell();
+            for (var i = 0; i < 4; i++)
+            {
+                for (var j = 0; j < 4; j++)
+                {
+                    cells[i * 4 + j].SetText(_stageState[i, j]);
+                }
+            }
+
+            if (IsGameOver(_stageState))
+            {
+                PlayerPrefs.SetInt("SCORE", score);
+                LoadResultScene();
+            }
+        }
+
+    }
+
     
     private bool BorderCheck(int row, int column, int horizontal, int vertical)
     {
@@ -114,7 +179,7 @@ public class GameManager : MonoBehaviour
         {
             return false;
         }
-        
+
         // 移動先が4x4外ならそれ以上処理は行わない
         var nextRow = row + vertical;
         var nextCol = column + horizontal;
@@ -153,20 +218,20 @@ public class GameManager : MonoBehaviour
         // 移動先の位置を計算
         var nextRow = row + vertical;
         var nextCol = column + horizontal;
-        
+
         // 移動元と移動先の値を取得
         var value = _stageState[row, column];
         var nextValue = _stageState[nextRow, nextCol];
-        
+
         // 次の移動先のマスが0の場合は移動する
         if (nextValue == 0)
         {
             // 移動元のマスは空欄になるので0を埋める
             _stageState[row, column] = 0;
-            
+
             // 移動先のマスに移動元のマスの値を代入する
             _stageState[nextRow, nextCol] = value;
-            
+
             // 移動先のマスでさらに移動チェック
             Move(nextRow, nextCol, horizontal, vertical);
         }
@@ -176,7 +241,7 @@ public class GameManager : MonoBehaviour
             _stageState[row, column] = 0;
             _stageState[nextRow, nextCol] = value * 2;
             score += value * 2;
-            scoreText.text = $"Score: {score}";
+            changedScore(score);
         }
         // 異なる値のときは移動処理を終了
         else if (value != nextValue)
@@ -194,15 +259,15 @@ public class GameManager : MonoBehaviour
         {
             return;
         }
-        var row = Random.Range(0, 4);
-        var col = Random.Range(0, 4);
+        var row = UnityEngine.Random.Range(0, 4);
+        var col = UnityEngine.Random.Range(0, 4);
         while (_stageState[row, col] != 0)
         {
-            row = Random.Range(0, 4);
-            col = Random.Range(0, 4);
+            row = UnityEngine.Random.Range(0, 4);
+            col = UnityEngine.Random.Range(0, 4);
         }
 
-        _stageState[row, col] = Random.Range(0, 1f) < 0.5f ? 2 : 4;
+        _stageState[row, col] = UnityEngine.Random.Range(0, 1f) < 0.5f ? 2 : 4;
     }
 
     private bool IsGameOver(int[,] stageState)
@@ -260,4 +325,5 @@ public class GameManager : MonoBehaviour
     {
         SceneManager.LoadScene("ResultScene");
     }
+
 }
