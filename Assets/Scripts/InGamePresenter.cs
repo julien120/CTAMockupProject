@@ -123,7 +123,7 @@ public class  InGamePresenter : MonoBehaviour
 
 
 
-    private bool BorderCheck(int row, int column, int horizontal, int vertical)
+    private bool CheckBorder(int row, int column, int horizontal, int vertical)
     {
         // チェックマスが4x4外ならそれ以上処理を行わない
         if (row < 0 || row >= 4 || column < 0 || column >= 4)
@@ -145,7 +145,7 @@ public class  InGamePresenter : MonoBehaviour
     private void CheckCell(int row, int column, int horizontal, int vertical)
     {
         // 4x4の境界線チェック
-        if (BorderCheck(row, column, horizontal, vertical) == false)
+        if (CheckBorder(row, column, horizontal, vertical) == false)
         {
             return;
         }
@@ -162,7 +162,7 @@ public class  InGamePresenter : MonoBehaviour
     {
         // 4x4境界線チェック
         // 再起呼び出し以降も毎回境界線チェックはするため冒頭で呼び出しておく
-        if (BorderCheck(row, column, horizontal, vertical) == false)
+        if (CheckBorder(row, column, horizontal, vertical) == false)
         {
             return;
         }
