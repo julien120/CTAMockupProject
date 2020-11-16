@@ -7,7 +7,14 @@ public class  InGamePresenter : MonoBehaviour
     private InGameView inGameView;
 
     [SerializeField] private Cell[] cells;
-    private readonly int[,] stageState = new int[4, 4];
+    private readonly int[,] stageState = new int[RowStage, ColStage];
+
+    //行列の数
+    private const int RowStage = 4;
+    private const int ColStage = 4;
+
+    //生成割合のパラメーター
+    private const float GenerationRate = 0.5f;
 
     /// <summary>
     /// 盤面の再描画を行う必要があるかのフラグ
@@ -26,24 +33,24 @@ public class  InGamePresenter : MonoBehaviour
 
 
         // ステージの初期状態を生成
-        for (var i = 0; i < 4; i++)
+        for (var i = 0; i < RowStage; i++)
         {
-            for (var j = 0; j < 4; j++)
+            for (var j = 0; j < ColStage; j++)
             {
                 stageState[i, j] = 0;
             }
         }
-        var posA = new Vector2(Random.Range(0, 4), Random.Range(0, 4));
-        var posB = new Vector2((posA.x + Random.Range(1, 3)) % 4, (posA.y + Random.Range(1, 3)) % 4);
+        var posA = new Vector2(Random.Range(0, RowStage), Random.Range(0, ColStage));
+        var posB = new Vector2((posA.x + Random.Range(1, RowStage-1)) % RowStage, (posA.y + Random.Range(1, ColStage-1)) % ColStage);
         stageState[(int)posA.x, (int)posA.y] = 2;
-        stageState[(int)posB.x, (int)posB.y] = Random.Range(0, 1.0f) < 0.5f ? 2 : 4;
+        stageState[(int)posB.x, (int)posB.y] = Random.Range(0, 1.0f) < GenerationRate ? 2 : 4;
 
         // ステージの初期状態をViewに反映
-        for (var i = 0; i < 4; i++)
+        for (var i = 0; i < RowStage; i++)
         {
-            for (var j = 0; j < 4; j++)
+            for (var j = 0; j < ColStage; j++)
             {
-                cells[i * 4 + j].SetText(stageState[i, j]);
+                cells[i * RowStage + j].SetText(stageState[i, j]);
             }
         }
     }
@@ -57,9 +64,9 @@ public class  InGamePresenter : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.RightArrow))
         {
-            for (var col = 4; col >= 0; col--)
+            for (var col = ColStage; col >= 0; col--)
             {
-                for (var row = 0; row < 4; row++)
+                for (var row = 0; row < RowStage; row++)
                 {
                     CheckCell(row, col, 1, 0);
                 }
@@ -68,9 +75,9 @@ public class  InGamePresenter : MonoBehaviour
 
         else if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            for (var row = 0; row < 4; row++)
+            for (var row = 0; row < RowStage; row++)
             {
-                for (var col = 0; col < 4; col++)
+                for (var col = 0; col < ColStage; col++)
                 {
                     CheckCell(row, col, -1, 0);
                 }
@@ -80,9 +87,9 @@ public class  InGamePresenter : MonoBehaviour
 
         else if (Input.GetKeyDown(KeyCode.UpArrow))
         {
-            for (var row = 0; row < 4; row++)
+            for (var row = 0; row < RowStage; row++)
             {
-                for (var col = 0; col < 4; col++)
+                for (var col = 0; col < ColStage; col++)
                 {
                     CheckCell(row, col, 0, -1);
                 }
@@ -91,9 +98,9 @@ public class  InGamePresenter : MonoBehaviour
 
         else if (Input.GetKeyDown(KeyCode.DownArrow))
         {
-            for (var row = 4; row >= 0; row--)
+            for (var row = RowStage; row >= 0; row--)
             {
-                for (var col = 0; col < 4; col++)
+                for (var col = 0; col < ColStage; col++)
                 {
                     CheckCell(row, col, 0, 1);
                 }
@@ -103,11 +110,11 @@ public class  InGamePresenter : MonoBehaviour
         if (isDirty)
         {
             CreateNewRandomCell();
-            for (var i = 0; i < 4; i++)
+            for (var i = 0; i < RowStage; i++)
             {
-                for (var j = 0; j < 4; j++)
+                for (var j = 0; j < ColStage; j++)
                 {
-                    cells[i * 4 + j].SetText(stageState[i, j]);
+                    cells[i * RowStage + j].SetText(stageState[i, j]);
                 }
             }
 
@@ -126,7 +133,7 @@ public class  InGamePresenter : MonoBehaviour
     private bool CheckBorder(int row, int column, int horizontal, int vertical)
     {
         // チェックマスが4x4外ならそれ以上処理を行わない
-        if (row < 0 || row >= 4 || column < 0 || column >= 4)
+        if (row < 0 || row >= RowStage || column < 0 || column >= ColStage)
         {
             return false;
         }
@@ -134,7 +141,7 @@ public class  InGamePresenter : MonoBehaviour
         // 移動先が4x4外ならそれ以上処理は行わない
         var nextRow = row + vertical;
         var nextCol = column + horizontal;
-        if (nextRow < 0 || nextRow >= 4 || nextCol < 0 || nextCol >= 4)
+        if (nextRow < 0 || nextRow >= RowStage || nextCol < 0 || nextCol >= ColStage)
         {
             return false;
         }
@@ -210,12 +217,12 @@ public class  InGamePresenter : MonoBehaviour
         {
             return;
         }
-        var row = Random.Range(0, 4);
-        var col = Random.Range(0, 4);
+        var row = Random.Range(0, RowStage);
+        var col = Random.Range(0, ColStage);
         while (stageState[row, col] != 0)
         {
-            row = Random.Range(0, 4);
-            col = Random.Range(0, 4);
+            row = Random.Range(0, RowStage);
+            col = Random.Range(0, ColStage);
         }
 
         stageState[row, col] = Random.Range(0, 1f) < 0.5f ? 2 : 4;
