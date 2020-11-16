@@ -23,7 +23,7 @@ public class  InGamePresenter : MonoBehaviour
 
         // Modelの値の変更を監視する
         inGameModel.changeScore += inGameView.SetScore;
-        
+
 
         // ステージの初期状態を生成
         for (var i = 0; i < 4; i++)
@@ -48,7 +48,7 @@ public class  InGamePresenter : MonoBehaviour
         }
     }
 
-    
+
 
     private void Update()
     {
@@ -66,7 +66,7 @@ public class  InGamePresenter : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        else if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
             for (var row = 0; row < 4; row++)
             {
@@ -78,7 +78,7 @@ public class  InGamePresenter : MonoBehaviour
 
         }
 
-        if (Input.GetKeyDown(KeyCode.UpArrow))
+        else if (Input.GetKeyDown(KeyCode.UpArrow))
         {
             for (var row = 0; row < 4; row++)
             {
@@ -89,7 +89,7 @@ public class  InGamePresenter : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.DownArrow))
+        else if (Input.GetKeyDown(KeyCode.DownArrow))
         {
             for (var row = 4; row >= 0; row--)
             {
@@ -120,8 +120,8 @@ public class  InGamePresenter : MonoBehaviour
 
     }
 
-    
-    
+
+
 
     private bool BorderCheck(int row, int column, int horizontal, int vertical)
     {
@@ -192,7 +192,7 @@ public class  InGamePresenter : MonoBehaviour
             _stageState[row, column] = 0;
             _stageState[nextRow, nextCol] = value * 2;
             inGameModel.SetScore(value);
-            
+
         }
         // 異なる値のときは移動処理を終了
         else if (value != nextValue)
