@@ -62,50 +62,7 @@ public class  InGamePresenter : MonoBehaviour
 
         isDirty = false;
 
-        if (Input.GetKeyDown(KeyCode.RightArrow))
-        {
-            for (var col = ColStage; col >= 0; col--)
-            {
-                for (var row = 0; row < RowStage; row++)
-                {
-                    CheckCell(row, col, 1, 0);
-                }
-            }
-        }
-
-        else if (Input.GetKeyDown(KeyCode.LeftArrow))
-        {
-            for (var row = 0; row < RowStage; row++)
-            {
-                for (var col = 0; col < ColStage; col++)
-                {
-                    CheckCell(row, col, -1, 0);
-                }
-            }
-
-        }
-
-        else if (Input.GetKeyDown(KeyCode.UpArrow))
-        {
-            for (var row = 0; row < RowStage; row++)
-            {
-                for (var col = 0; col < ColStage; col++)
-                {
-                    CheckCell(row, col, 0, -1);
-                }
-            }
-        }
-
-        else if (Input.GetKeyDown(KeyCode.DownArrow))
-        {
-            for (var row = RowStage; row >= 0; row--)
-            {
-                for (var col = 0; col < ColStage; col++)
-                {
-                    CheckCell(row, col, 0, 1);
-                }
-            }
-        }
+        InputKey();
 
         if (isDirty)
         {
@@ -243,6 +200,70 @@ public class  InGamePresenter : MonoBehaviour
         }
 
         // 合成可能なマスが一つでもあればゲームオーバーにはならない
+        SynthesizeCell();
+
+        return true;
+    }
+
+    ///<summary>
+    ///セルの移動
+    ///</summary>
+
+    private void InputKey()
+    {
+        if (Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            for (var col = ColStage; col >= 0; col--)
+            {
+                for (var row = 0; row < RowStage; row++)
+                {
+                    CheckCell(row, col, 1, 0);
+                }
+            }
+        }
+
+        else if (Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            for (var row = 0; row < RowStage; row++)
+            {
+                for (var col = 0; col < ColStage; col++)
+                {
+                    CheckCell(row, col, -1, 0);
+                }
+            }
+
+        }
+
+        else if (Input.GetKeyDown(KeyCode.UpArrow))
+        {
+            for (var row = 0; row < RowStage; row++)
+            {
+                for (var col = 0; col < ColStage; col++)
+                {
+                    CheckCell(row, col, 0, -1);
+                }
+            }
+        }
+
+        else if (Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            for (var row = RowStage; row >= 0; row--)
+            {
+                for (var col = 0; col < ColStage; col++)
+                {
+                    CheckCell(row, col, 0, 1);
+                }
+            }
+        }
+    }
+   
+
+    /// <summary>
+    /// 合成のネスト
+    /// </summary>
+
+    private void SynthesizeCell()
+    {
         for (var i = 0; i < stageState.GetLength(0); i++)
         {
             for (var j = 0; j < stageState.GetLength(1); j++)
@@ -271,17 +292,17 @@ public class  InGamePresenter : MonoBehaviour
 
                 if (canMerge)
                 {
-                    return false;
+                    return;
                 }
             }
         }
-
-        return true;
     }
+
 
     private void LoadResultScene()
     {
         SceneManager.LoadScene("ResultScene");
     }
+
 
 }
