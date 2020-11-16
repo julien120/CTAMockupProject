@@ -61,7 +61,7 @@ public class  InGamePresenter : MonoBehaviour
             {
                 for (var row = 0; row < 4; row++)
                 {
-                    Check(row, col, 1, 0);
+                    CheckCell(row, col, 1, 0);
                 }
             }
         }
@@ -72,7 +72,7 @@ public class  InGamePresenter : MonoBehaviour
             {
                 for (var col = 0; col < 4; col++)
                 {
-                    Check(row, col, -1, 0);
+                    CheckCell(row, col, -1, 0);
                 }
             }
 
@@ -84,7 +84,7 @@ public class  InGamePresenter : MonoBehaviour
             {
                 for (var col = 0; col < 4; col++)
                 {
-                    Check(row, col, 0, -1);
+                    CheckCell(row, col, 0, -1);
                 }
             }
         }
@@ -95,7 +95,7 @@ public class  InGamePresenter : MonoBehaviour
             {
                 for (var col = 0; col < 4; col++)
                 {
-                    Check(row, col, 0, 1);
+                    CheckCell(row, col, 0, 1);
                 }
             }
         }
@@ -142,7 +142,7 @@ public class  InGamePresenter : MonoBehaviour
         return true;
     }
 
-    private void Check(int row, int column, int horizontal, int vertical)
+    private void CheckCell(int row, int column, int horizontal, int vertical)
     {
         // 4x4の境界線チェック
         if (BorderCheck(row, column, horizontal, vertical) == false)
@@ -155,10 +155,10 @@ public class  InGamePresenter : MonoBehaviour
             return;
         }
         // 移動可能条件を満たした場合のみ移動処理
-        Move(row, column, horizontal, vertical);
+        MoveCell(row, column, horizontal, vertical);
     }
 
-    private void Move(int row, int column, int horizontal, int vertical)
+    private void MoveCell(int row, int column, int horizontal, int vertical)
     {
         // 4x4境界線チェック
         // 再起呼び出し以降も毎回境界線チェックはするため冒頭で呼び出しておく
@@ -184,7 +184,7 @@ public class  InGamePresenter : MonoBehaviour
             stageState[nextRow, nextCol] = value;
 
             // 移動先のマスでさらに移動チェック
-            Move(nextRow, nextCol, horizontal, vertical);
+            MoveCell(nextRow, nextCol, horizontal, vertical);
         }
         // 同じ値のときは合成処理
         else if (value == nextValue)
