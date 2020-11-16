@@ -13,6 +13,9 @@ public class  InGamePresenter : MonoBehaviour
     private const int RowStage = 4;
     private const int ColStage = 4;
 
+    //生成割合のパラメーター
+    private const float GenerationRate = 0.5f;
+
     /// <summary>
     /// 盤面の再描画を行う必要があるかのフラグ
     /// </summary>
@@ -40,14 +43,14 @@ public class  InGamePresenter : MonoBehaviour
         var posA = new Vector2(Random.Range(0, RowStage), Random.Range(0, ColStage));
         var posB = new Vector2((posA.x + Random.Range(1, RowStage-1)) % RowStage, (posA.y + Random.Range(1, ColStage-1)) % ColStage);
         stageState[(int)posA.x, (int)posA.y] = 2;
-        stageState[(int)posB.x, (int)posB.y] = Random.Range(0, 1.0f) < 0.5f ? 2 : 4;
+        stageState[(int)posB.x, (int)posB.y] = Random.Range(0, 1.0f) < GenerationRate ? 2 : 4;
 
         // ステージの初期状態をViewに反映
         for (var i = 0; i < RowStage; i++)
         {
             for (var j = 0; j < ColStage; j++)
             {
-                cells[i * ColStage + j].SetText(stageState[i, j]);
+                cells[i * RowStage + j].SetText(stageState[i, j]);
             }
         }
     }
@@ -111,7 +114,7 @@ public class  InGamePresenter : MonoBehaviour
             {
                 for (var j = 0; j < ColStage; j++)
                 {
-                    cells[i * ColStage + j].SetText(stageState[i, j]);
+                    cells[i * RowStage + j].SetText(stageState[i, j]);
                 }
             }
 
