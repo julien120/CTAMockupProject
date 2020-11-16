@@ -7,9 +7,9 @@ public class  InGamePresenter : MonoBehaviour
     private InGameView inGameView;
 
     [SerializeField] private Cell[] cells;
-    private readonly int[,] stageState = new int[4, 4];
+    private readonly int[,] stageState = new int[RowStage, ColStage];
 
-    //マジックナンバー
+    //行列の数
     private const int RowStage = 4;
     private const int ColStage = 4;
 
@@ -38,7 +38,7 @@ public class  InGamePresenter : MonoBehaviour
             }
         }
         var posA = new Vector2(Random.Range(0, RowStage), Random.Range(0, ColStage));
-        var posB = new Vector2((posA.x + Random.Range(1, 3)) % RowStage, (posA.y + Random.Range(1, 3)) % ColStage);
+        var posB = new Vector2((posA.x + Random.Range(1, RowStage-1)) % RowStage, (posA.y + Random.Range(1, ColStage-1)) % ColStage);
         stageState[(int)posA.x, (int)posA.y] = 2;
         stageState[(int)posB.x, (int)posB.y] = Random.Range(0, 1.0f) < 0.5f ? 2 : 4;
 
@@ -47,7 +47,7 @@ public class  InGamePresenter : MonoBehaviour
         {
             for (var j = 0; j < ColStage; j++)
             {
-                cells[i * 4 + j].SetText(stageState[i, j]);
+                cells[i * ColStage + j].SetText(stageState[i, j]);
             }
         }
     }
