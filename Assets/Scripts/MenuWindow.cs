@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class MenuWindow : MonoBehaviour
 {
-    [SerializeField] Button CloseButton;
+    [SerializeField] Button IcloseButton;
 
     /// <summary>
     /// Windowを表示する
@@ -13,7 +13,6 @@ public class MenuWindow : MonoBehaviour
     public void OpenWindow()
     {
         gameObject.SetActive(true);
-
     }
 
     /// <summary>

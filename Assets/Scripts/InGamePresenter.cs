@@ -7,7 +7,7 @@ public class  InGamePresenter : MonoBehaviour
     private InGameView inGameView;
 
     [SerializeField] private Cell[] cells;
-    private readonly int[,] _stageState = new int[4, 4];
+    private readonly int[,] stageState = new int[4, 4];
 
     /// <summary>
     /// 盤面の再描画を行う必要があるかのフラグ
@@ -30,20 +30,20 @@ public class  InGamePresenter : MonoBehaviour
         {
             for (var j = 0; j < 4; j++)
             {
-                _stageState[i, j] = 0;
+                stageState[i, j] = 0;
             }
         }
         var posA = new Vector2(Random.Range(0, 4), Random.Range(0, 4));
         var posB = new Vector2((posA.x + Random.Range(1, 3)) % 4, (posA.y + Random.Range(1, 3)) % 4);
-        _stageState[(int)posA.x, (int)posA.y] = 2;
-        _stageState[(int)posB.x, (int)posB.y] = Random.Range(0, 1.0f) < 0.5f ? 2 : 4;
+        stageState[(int)posA.x, (int)posA.y] = 2;
+        stageState[(int)posB.x, (int)posB.y] = Random.Range(0, 1.0f) < 0.5f ? 2 : 4;
 
         // ステージの初期状態をViewに反映
         for (var i = 0; i < 4; i++)
         {
             for (var j = 0; j < 4; j++)
             {
-                cells[i * 4 + j].SetText(_stageState[i, j]);
+                cells[i * 4 + j].SetText(stageState[i, j]);
             }
         }
     }
@@ -107,11 +107,11 @@ public class  InGamePresenter : MonoBehaviour
             {
                 for (var j = 0; j < 4; j++)
                 {
-                    cells[i * 4 + j].SetText(_stageState[i, j]);
+                    cells[i * 4 + j].SetText(stageState[i, j]);
                 }
             }
 
-            if (IsGameOver(_stageState))
+            if (IsGameOver(stageState))
             {
                 PlayerPrefs.SetInt("SCORE", inGameModel.GetScore());
                 LoadResultScene();
@@ -150,7 +150,7 @@ public class  InGamePresenter : MonoBehaviour
             return;
         }
         // 空欄マスは移動処理をしない
-        if (_stageState[row, column] == 0)
+        if (stageState[row, column] == 0)
         {
             return;
         }
@@ -171,17 +171,17 @@ public class  InGamePresenter : MonoBehaviour
         var nextCol = column + horizontal;
 
         // 移動元と移動先の値を取得
-        var value = _stageState[row, column];
-        var nextValue = _stageState[nextRow, nextCol];
+        var value = stageState[row, column];
+        var nextValue = stageState[nextRow, nextCol];
 
         // 次の移動先のマスが0の場合は移動する
         if (nextValue == 0)
         {
             // 移動元のマスは空欄になるので0を埋める
-            _stageState[row, column] = 0;
+            stageState[row, column] = 0;
 
             // 移動先のマスに移動元のマスの値を代入する
-            _stageState[nextRow, nextCol] = value;
+            stageState[nextRow, nextCol] = value;
 
             // 移動先のマスでさらに移動チェック
             Move(nextRow, nextCol, horizontal, vertical);
@@ -189,8 +189,8 @@ public class  InGamePresenter : MonoBehaviour
         // 同じ値のときは合成処理
         else if (value == nextValue)
         {
-            _stageState[row, column] = 0;
-            _stageState[nextRow, nextCol] = value * 2;
+            stageState[row, column] = 0;
+            stageState[nextRow, nextCol] = value * 2;
             inGameModel.SetScore(value);
 
         }
@@ -206,19 +206,19 @@ public class  InGamePresenter : MonoBehaviour
     private void CreateNewRandomCell()
     {
         // ゲーム終了時はスポーンしない
-        if (IsGameOver(_stageState))
+        if (IsGameOver(stageState))
         {
             return;
         }
         var row = Random.Range(0, 4);
         var col = Random.Range(0, 4);
-        while (_stageState[row, col] != 0)
+        while (stageState[row, col] != 0)
         {
             row = Random.Range(0, 4);
             col = Random.Range(0, 4);
         }
 
-        _stageState[row, col] = Random.Range(0, 1f) < 0.5f ? 2 : 4;
+        stageState[row, col] = Random.Range(0, 1f) < 0.5f ? 2 : 4;
     }
 
     private bool IsGameOver(int[,] stageState)
