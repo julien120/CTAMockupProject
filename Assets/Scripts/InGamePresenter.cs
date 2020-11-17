@@ -12,6 +12,7 @@ public class  InGamePresenter : MonoBehaviour
     //行列の数
     private const int RowStage = 4;
     private const int ColStage = 4;
+    
 
     //生成割合のパラメーター
     private const float GenerationRate = 0.5f;
@@ -21,12 +22,13 @@ public class  InGamePresenter : MonoBehaviour
     /// </summary>
     private bool isDirty;
 
+    
    
 
 
     private void Start()
     {
-
+        
         inGameModel = GetComponent<InGameModel>();
         inGameView = GetComponent<InGameView>();
 
@@ -167,7 +169,7 @@ public class  InGamePresenter : MonoBehaviour
     private bool IsGameOver(int[,] stageState)
     {
         // 空いている場所があればゲームオーバーにはならない
-        for (var i = 0; i < stageState.GetLength(0); i++)
+        for (var i = 0; i < RowStage; i++)
         {
             for (var j = 0; j < stageState.GetLength(1); j++)
             {
@@ -244,7 +246,7 @@ public class  InGamePresenter : MonoBehaviour
 
         if (IsGameOver(stageState))
         {
-            PlayerPrefs.SetInt("SCORE", inGameModel.GetScore());
+            PlayerPrefs.SetInt(PlayerPrefsKeys.ScoreData, inGameModel.GetScore());
             LoadResultScene();
         }
     }
@@ -263,9 +265,9 @@ public class  InGamePresenter : MonoBehaviour
 
     private bool IsSynthesizeCell(int[,] stageState)
     {
-        for (var i = 0; i < stageState.GetLength(0); i++)
+        for (var i = 0; i < RowStage; i++)
         {
-            for (var j = 0; j < stageState.GetLength(1); j++)
+            for (var j = 0; j < ColStage; j++)
             {
                 var state = stageState[i, j];
                 var canMerge = false;
@@ -274,7 +276,7 @@ public class  InGamePresenter : MonoBehaviour
                     canMerge |= state == stageState[i - 1, j];
                 }
 
-                if (i < stageState.GetLength(0) - 1)
+                if (i < RowStage - 1)
                 {
                     canMerge |= state == stageState[i + 1, j];
                 }
@@ -284,7 +286,7 @@ public class  InGamePresenter : MonoBehaviour
                     canMerge |= state == stageState[i, j - 1];
                 }
 
-                if (j < stageState.GetLength(1) - 1)
+                if (j < ColStage - 1)
                 {
                     canMerge |= state == stageState[i, j + 1];
                 }
@@ -300,8 +302,12 @@ public class  InGamePresenter : MonoBehaviour
 
     private void LoadResultScene()
     {
-        SceneManager.LoadScene("ResultScene");
+        
+        SceneManager.LoadScene(SceneName.ResultScene);
     }
+
+
+    
 
 
 }

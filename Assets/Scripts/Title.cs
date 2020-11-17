@@ -8,7 +8,7 @@ public class Title : MonoBehaviour
 
     public void LoadInGameScene()
     {
-        SceneManager.LoadScene("InGameScene");
+        SceneManager.LoadScene(SceneController.InGameScene);
     }
 
 }
