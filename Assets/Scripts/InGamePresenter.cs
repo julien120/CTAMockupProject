@@ -46,16 +46,8 @@ public class  InGamePresenter : MonoBehaviour
         stageState[(int)posB.x, (int)posB.y] = Random.Range(0, 1.0f) < GenerationRate ? 2 : 4;
 
         // ステージの初期状態をViewに反映
-        for (var i = 0; i < RowStage; i++)
-        {
-            for (var j = 0; j < ColStage; j++)
-            {
-                cells[i * RowStage + j].SetText(stageState[i, j]);
-            }
-        }
+        ReflectStage();
     }
-
-
 
     private void Update()
     {
@@ -67,25 +59,10 @@ public class  InGamePresenter : MonoBehaviour
         if (isDirty)
         {
             CreateNewRandomCell();
-            for (var i = 0; i < RowStage; i++)
-            {
-                for (var j = 0; j < ColStage; j++)
-                {
-                    cells[i * RowStage + j].SetText(stageState[i, j]);
-                }
-            }
-
-            if (IsGameOver(stageState))
-            {
-                PlayerPrefs.SetInt("SCORE", inGameModel.GetScore());
-                LoadResultScene();
-            }
+            ReflectUI();
         }
 
     }
-
-
-
 
     private bool CheckBorder(int row, int column, int horizontal, int vertical)
     {
@@ -182,7 +159,7 @@ public class  InGamePresenter : MonoBehaviour
             col = Random.Range(0, ColStage);
         }
 
-        stageState[row, col] = Random.Range(0, 1f) < 0.5f ? 2 : 4;
+        stageState[row, col] = Random.Range(0, 1f) < GenerationRate ? 2 : 4;
     }
 
     private bool IsGameOver(int[,] stageState)
@@ -200,7 +177,7 @@ public class  InGamePresenter : MonoBehaviour
         }
 
         // 合成可能なマスが一つでもあればゲームオーバーにはならない
-        SynthesizeCell();
+        IsSynthesizeCell();
 
         return true;
     }
@@ -256,13 +233,35 @@ public class  InGamePresenter : MonoBehaviour
             }
         }
     }
-   
+
 
     /// <summary>
-    /// 合成のネスト
+    /// セルをUIに反映する処理
     /// </summary>
+    private void ReflectUI()
+    {
+        ReflectStage();
 
-    private void SynthesizeCell()
+        if (IsGameOver(stageState))
+        {
+            PlayerPrefs.SetInt("SCORE", inGameModel.GetScore());
+            LoadResultScene();
+        }
+    }
+
+    private void ReflectStage()
+    {
+        for (var i = 0; i < RowStage; i++)
+        {
+            for (var j = 0; j < ColStage; j++)
+            {
+                cells[i * RowStage + j].SetText(stageState[i, j]);
+            }
+        }
+    }
+   
+
+    private bool IsSynthesizeCell()
     {
         for (var i = 0; i < stageState.GetLength(0); i++)
         {
@@ -292,12 +291,12 @@ public class  InGamePresenter : MonoBehaviour
 
                 if (canMerge)
                 {
-                    return;
+                    return false;
                 }
             }
         }
+        return true;
     }
-
 
     private void LoadResultScene()
     {
