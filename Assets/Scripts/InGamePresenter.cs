@@ -28,7 +28,7 @@ public class  InGamePresenter : MonoBehaviour
 
     private void Start()
     {
-
+        
         inGameModel = GetComponent<InGameModel>();
         inGameView = GetComponent<InGameView>();
 
@@ -302,8 +302,12 @@ public class  InGamePresenter : MonoBehaviour
 
     private void LoadResultScene()
     {
-        SceneManager.LoadScene(SceneController.ResultScene);
+        
+        SceneManager.LoadScene(SceneName.ResultScene);
     }
+
+
+    
 
 
 }
