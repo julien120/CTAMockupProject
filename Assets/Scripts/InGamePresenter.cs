@@ -21,6 +21,8 @@ public class  InGamePresenter : MonoBehaviour
     /// </summary>
     private bool isDirty;
 
+   
+
 
     private void Start()
     {
@@ -177,9 +179,7 @@ public class  InGamePresenter : MonoBehaviour
         }
 
         // 合成可能なマスが一つでもあればゲームオーバーにはならない
-        IsSynthesizeCell(stageState);
-
-        return true;
+        return IsSynthesizeCell(stageState);
     }
 
     ///<summary>
