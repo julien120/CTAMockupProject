@@ -9,11 +9,11 @@ public class Result : MonoBehaviour
 
     private void Start()
     {
-        resultText.text = PlayerPrefs.GetInt(InGamePresenter.ScoreData, 0).ToString();
+        resultText.text = PlayerPrefs.GetInt(PlayerPrefsKeys.ScoreData, 0).ToString();
     }
 
     public void OnClickRetryButton()
     {
-        SceneManager.LoadScene("InGameScene");
+        SceneManager.LoadScene(SceneController.InGameScene);
     }
 }

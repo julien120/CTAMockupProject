@@ -12,7 +12,7 @@ public class  InGamePresenter : MonoBehaviour
     //行列の数
     private const int RowStage = 4;
     private const int ColStage = 4;
-    public const string ScoreData = "SCORE";
+    
 
     //生成割合のパラメーター
     private const float GenerationRate = 0.5f;
@@ -22,8 +22,8 @@ public class  InGamePresenter : MonoBehaviour
     /// </summary>
     private bool isDirty;
 
-    //文字列
-    public const string ResultScene = "ResultScene";
+    
+   
 
 
     private void Start()
@@ -246,7 +246,7 @@ public class  InGamePresenter : MonoBehaviour
 
         if (IsGameOver(stageState))
         {
-            PlayerPrefs.SetInt(ScoreData, inGameModel.GetScore());
+            PlayerPrefs.SetInt(PlayerPrefsKeys.ScoreData, inGameModel.GetScore());
             LoadResultScene();
         }
     }
@@ -302,7 +302,7 @@ public class  InGamePresenter : MonoBehaviour
 
     private void LoadResultScene()
     {
-        SceneManager.LoadScene(ResultScene);
+        SceneManager.LoadScene(SceneController.ResultScene);
     }
 
 
