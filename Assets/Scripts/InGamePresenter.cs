@@ -21,6 +21,8 @@ public class  InGamePresenter : MonoBehaviour
     /// </summary>
     private bool isDirty;
 
+   
+
 
     private void Start()
     {
@@ -46,89 +48,23 @@ public class  InGamePresenter : MonoBehaviour
         stageState[(int)posB.x, (int)posB.y] = Random.Range(0, 1.0f) < GenerationRate ? 2 : 4;
 
         // ステージの初期状態をViewに反映
-        for (var i = 0; i < RowStage; i++)
-        {
-            for (var j = 0; j < ColStage; j++)
-            {
-                cells[i * RowStage + j].SetText(stageState[i, j]);
-            }
-        }
+        ReflectStage();
     }
-
-
 
     private void Update()
     {
 
         isDirty = false;
 
-        if (Input.GetKeyDown(KeyCode.RightArrow))
-        {
-            for (var col = ColStage; col >= 0; col--)
-            {
-                for (var row = 0; row < RowStage; row++)
-                {
-                    CheckCell(row, col, 1, 0);
-                }
-            }
-        }
-
-        else if (Input.GetKeyDown(KeyCode.LeftArrow))
-        {
-            for (var row = 0; row < RowStage; row++)
-            {
-                for (var col = 0; col < ColStage; col++)
-                {
-                    CheckCell(row, col, -1, 0);
-                }
-            }
-
-        }
-
-        else if (Input.GetKeyDown(KeyCode.UpArrow))
-        {
-            for (var row = 0; row < RowStage; row++)
-            {
-                for (var col = 0; col < ColStage; col++)
-                {
-                    CheckCell(row, col, 0, -1);
-                }
-            }
-        }
-
-        else if (Input.GetKeyDown(KeyCode.DownArrow))
-        {
-            for (var row = RowStage; row >= 0; row--)
-            {
-                for (var col = 0; col < ColStage; col++)
-                {
-                    CheckCell(row, col, 0, 1);
-                }
-            }
-        }
+        InputKey();
 
         if (isDirty)
         {
             CreateNewRandomCell();
-            for (var i = 0; i < RowStage; i++)
-            {
-                for (var j = 0; j < ColStage; j++)
-                {
-                    cells[i * RowStage + j].SetText(stageState[i, j]);
-                }
-            }
-
-            if (IsGameOver(stageState))
-            {
-                PlayerPrefs.SetInt("SCORE", inGameModel.GetScore());
-                LoadResultScene();
-            }
+            ReflectUI();
         }
 
     }
-
-
-
 
     private bool CheckBorder(int row, int column, int horizontal, int vertical)
     {
@@ -225,7 +161,7 @@ public class  InGamePresenter : MonoBehaviour
             col = Random.Range(0, ColStage);
         }
 
-        stageState[row, col] = Random.Range(0, 1f) < 0.5f ? 2 : 4;
+        stageState[row, col] = Random.Range(0, 1f) < GenerationRate ? 2 : 4;
     }
 
     private bool IsGameOver(int[,] stageState)
@@ -243,6 +179,90 @@ public class  InGamePresenter : MonoBehaviour
         }
 
         // 合成可能なマスが一つでもあればゲームオーバーにはならない
+        return IsSynthesizeCell(stageState);
+    }
+
+    ///<summary>
+    ///セルの移動
+    ///</summary>
+
+    private void InputKey()
+    {
+        if (Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            for (var col = ColStage; col >= 0; col--)
+            {
+                for (var row = 0; row < RowStage; row++)
+                {
+                    CheckCell(row, col, 1, 0);
+                }
+            }
+        }
+
+        else if (Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            for (var row = 0; row < RowStage; row++)
+            {
+                for (var col = 0; col < ColStage; col++)
+                {
+                    CheckCell(row, col, -1, 0);
+                }
+            }
+
+        }
+
+        else if (Input.GetKeyDown(KeyCode.UpArrow))
+        {
+            for (var row = 0; row < RowStage; row++)
+            {
+                for (var col = 0; col < ColStage; col++)
+                {
+                    CheckCell(row, col, 0, -1);
+                }
+            }
+        }
+
+        else if (Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            for (var row = RowStage; row >= 0; row--)
+            {
+                for (var col = 0; col < ColStage; col++)
+                {
+                    CheckCell(row, col, 0, 1);
+                }
+            }
+        }
+    }
+
+
+    /// <summary>
+    /// セルをUIに反映する処理
+    /// </summary>
+    private void ReflectUI()
+    {
+        ReflectStage();
+
+        if (IsGameOver(stageState))
+        {
+            PlayerPrefs.SetInt("SCORE", inGameModel.GetScore());
+            LoadResultScene();
+        }
+    }
+
+    private void ReflectStage()
+    {
+        for (var i = 0; i < RowStage; i++)
+        {
+            for (var j = 0; j < ColStage; j++)
+            {
+                cells[i * RowStage + j].SetText(stageState[i, j]);
+            }
+        }
+    }
+   
+
+    private bool IsSynthesizeCell(int[,] stageState)
+    {
         for (var i = 0; i < stageState.GetLength(0); i++)
         {
             for (var j = 0; j < stageState.GetLength(1); j++)
@@ -275,7 +295,6 @@ public class  InGamePresenter : MonoBehaviour
                 }
             }
         }
-
         return true;
     }
 
@@ -283,5 +302,6 @@ public class  InGamePresenter : MonoBehaviour
     {
         SceneManager.LoadScene("ResultScene");
     }
+
 
 }
