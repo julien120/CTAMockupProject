@@ -177,7 +177,7 @@ public class  InGamePresenter : MonoBehaviour
         }
 
         // 合成可能なマスが一つでもあればゲームオーバーにはならない
-        IsSynthesizeCell();
+        IsSynthesizeCell(stageState);
 
         return true;
     }
@@ -261,7 +261,7 @@ public class  InGamePresenter : MonoBehaviour
     }
    
 
-    private bool IsSynthesizeCell()
+    private bool IsSynthesizeCell(int[,] stageState)
     {
         for (var i = 0; i < stageState.GetLength(0); i++)
         {
