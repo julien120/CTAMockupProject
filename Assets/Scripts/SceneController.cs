@@ -5,7 +5,7 @@ public class SceneController : MonoBehaviour
 {
     private static SceneController instance;
 
-    //_instanceに一意のインスタンスを格納し、これのみ参照する構造
+    //instanceに一意のインスタンスを格納し、これのみ参照する構造
     public static SceneController Instance
     {
 
@@ -15,7 +15,7 @@ public class SceneController : MonoBehaviour
             {
 
                 GameObject single = new GameObject();
-                //_instanceに格納されてる値を管理する
+                //instanceに格納されてる値を管理する
                 instance = single.AddComponent<SceneController>();
                 //scene跨いでもインスタンスが残るのでnull処理に行かない
                 DontDestroyOnLoad(instance);
