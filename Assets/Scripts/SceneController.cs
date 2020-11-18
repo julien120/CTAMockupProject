@@ -3,25 +3,25 @@ using UnityEngine.SceneManagement;
 
 public class SceneController : MonoBehaviour
 {
-    private static SceneController _instance;
+    private static SceneController instance;
 
-    //_instanceに一意のインスタンを格納し、これのみ参照する構造
+    //_instanceに一意のインスタンスを格納し、これのみ参照する構造
     public static SceneController Instance
     {
 
         get
         {
-            if (_instance == null)
+            if (instance == null)
             {
 
                 GameObject single = new GameObject();
                 //_instanceに格納されてる値を管理する
-                _instance = single.AddComponent<SceneController>();
+                instance = single.AddComponent<SceneController>();
                 //scene跨いでもインスタンスが残るのでnull処理に行かない
-                DontDestroyOnLoad(_instance);
+                DontDestroyOnLoad(instance);
 
             }
-            return _instance;
+            return instance;
 
         }
     }
