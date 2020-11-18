@@ -247,7 +247,7 @@ public class  InGamePresenter : MonoBehaviour
         if (IsGameOver(stageState))
         {
             PlayerPrefs.SetInt(PlayerPrefsKeys.ScoreData, inGameModel.GetScore());
-            LoadResultScene();
+            SceneController.Instance.LoadResultScene();
         }
     }
 
@@ -300,11 +300,7 @@ public class  InGamePresenter : MonoBehaviour
         return true;
     }
 
-    private void LoadResultScene()
-    {
-        
-        SceneManager.LoadScene(SceneName.ResultScene);
-    }
+
 
 
     
