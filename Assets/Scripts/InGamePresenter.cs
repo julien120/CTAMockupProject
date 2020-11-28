@@ -6,25 +6,16 @@ public class  InGamePresenter : MonoBehaviour
     private InGameModel inGameModel;
     private InGameView inGameView;
 
-    [SerializeField] private Cell[] cells;
-    private readonly int[,] stageState = new int[RowStage, ColStage];
-
-    //行列の数
-    private const int RowStage = 4;
-    private const int ColStage = 4;
-    
-
-    //生成割合のパラメーター
-    private const float GenerationRate = 0.5f;
+   
+    private int RowStage = InGameView.RowStage;
+    private int ColStage = InGameView.ColStage;
 
     /// <summary>
     /// 盤面の再描画を行う必要があるかのフラグ
     /// </summary>
     private bool isDirty;
 
-    
-   
-
+    private int[,] stageState;
 
     private void Start()
     {
@@ -32,33 +23,20 @@ public class  InGamePresenter : MonoBehaviour
         inGameModel = GetComponent<InGameModel>();
         inGameView = GetComponent<InGameView>();
 
+        stageState = inGameView.stageState;
+
         // Modelの値の変更を監視する
         inGameModel.changeScore += inGameView.SetScore;
 
+        inGameView.CheckCell += CheckCell;
 
-        // ステージの初期状態を生成
-        for (var i = 0; i < RowStage; i++)
-        {
-            for (var j = 0; j < ColStage; j++)
-            {
-                stageState[i, j] = 0;
-            }
-        }
-        var posA = new Vector2(Random.Range(0, RowStage), Random.Range(0, ColStage));
-        var posB = new Vector2((posA.x + Random.Range(1, RowStage-1)) % RowStage, (posA.y + Random.Range(1, ColStage-1)) % ColStage);
-        stageState[(int)posA.x, (int)posA.y] = 2;
-        stageState[(int)posB.x, (int)posB.y] = Random.Range(0, 1.0f) < GenerationRate ? 2 : 4;
-
-        // ステージの初期状態をViewに反映
-        ReflectStage();
+ 
     }
 
     private void Update()
     {
 
         isDirty = false;
-
-        InputKey();
 
         if (isDirty)
         {
@@ -68,8 +46,10 @@ public class  InGamePresenter : MonoBehaviour
 
     }
 
+    //判定系もmodel?
     private bool CheckBorder(int row, int column, int horizontal, int vertical)
     {
+        
         // チェックマスが4x4外ならそれ以上処理を行わない
         if (row < 0 || row >= RowStage || column < 0 || column >= ColStage)
         {
@@ -151,7 +131,7 @@ public class  InGamePresenter : MonoBehaviour
     private void CreateNewRandomCell()
     {
         // ゲーム終了時はスポーンしない
-        if (IsGameOver(stageState))
+        if (inGameModel.IsGameOver(stageState))
         {
             return;
         }
@@ -163,78 +143,16 @@ public class  InGamePresenter : MonoBehaviour
             col = Random.Range(0, ColStage);
         }
 
-        stageState[row, col] = Random.Range(0, 1f) < GenerationRate ? 2 : 4;
+        stageState[row, col] = Random.Range(0, 1f) < InGameModel.GenerationRate ? 2 : 4;
     }
 
-    private bool IsGameOver(int[,] stageState)
-    {
-        // 空いている場所があればゲームオーバーにはならない
-        for (var i = 0; i < RowStage; i++)
-        {
-            for (var j = 0; j < stageState.GetLength(1); j++)
-            {
-                if (stageState[i, j] <= 0)
-                {
-                    return false;
-                }
-            }
-        }
 
-        // 合成可能なマスが一つでもあればゲームオーバーにはならない
-        return IsSynthesizeCell(stageState);
-    }
 
     ///<summary>
     ///セルの移動
     ///</summary>
 
-    private void InputKey()
-    {
-        if (Input.GetKeyDown(KeyCode.RightArrow))
-        {
-            for (var col = ColStage; col >= 0; col--)
-            {
-                for (var row = 0; row < RowStage; row++)
-                {
-                    CheckCell(row, col, 1, 0);
-                }
-            }
-        }
 
-        else if (Input.GetKeyDown(KeyCode.LeftArrow))
-        {
-            for (var row = 0; row < RowStage; row++)
-            {
-                for (var col = 0; col < ColStage; col++)
-                {
-                    CheckCell(row, col, -1, 0);
-                }
-            }
-
-        }
-
-        else if (Input.GetKeyDown(KeyCode.UpArrow))
-        {
-            for (var row = 0; row < RowStage; row++)
-            {
-                for (var col = 0; col < ColStage; col++)
-                {
-                    CheckCell(row, col, 0, -1);
-                }
-            }
-        }
-
-        else if (Input.GetKeyDown(KeyCode.DownArrow))
-        {
-            for (var row = RowStage; row >= 0; row--)
-            {
-                for (var col = 0; col < ColStage; col++)
-                {
-                    CheckCell(row, col, 0, 1);
-                }
-            }
-        }
-    }
 
 
     /// <summary>
@@ -242,63 +160,20 @@ public class  InGamePresenter : MonoBehaviour
     /// </summary>
     private void ReflectUI()
     {
-        ReflectStage();
+        inGameView.ReflectStage();
 
-        if (IsGameOver(stageState))
+        if (inGameModel.IsGameOver(stageState))
         {
+            //score保存自体もmodel?
             PlayerPrefs.SetInt(PlayerPrefsKeys.ScoreData, inGameModel.GetScore());
             SceneController.Instance.LoadResultScene();
         }
     }
 
-    private void ReflectStage()
-    {
-        for (var i = 0; i < RowStage; i++)
-        {
-            for (var j = 0; j < ColStage; j++)
-            {
-                cells[i * RowStage + j].SetText(stageState[i, j]);
-            }
-        }
-    }
+    
    
 
-    private bool IsSynthesizeCell(int[,] stageState)
-    {
-        for (var i = 0; i < RowStage; i++)
-        {
-            for (var j = 0; j < ColStage; j++)
-            {
-                var state = stageState[i, j];
-                var canMerge = false;
-                if (i > 0)
-                {
-                    canMerge |= state == stageState[i - 1, j];
-                }
-
-                if (i < RowStage - 1)
-                {
-                    canMerge |= state == stageState[i + 1, j];
-                }
-
-                if (j > 0)
-                {
-                    canMerge |= state == stageState[i, j - 1];
-                }
-
-                if (j < ColStage - 1)
-                {
-                    canMerge |= state == stageState[i, j + 1];
-                }
-
-                if (canMerge)
-                {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
+    
 
 
 
