@@ -10,58 +10,41 @@ public class InGameView : MonoBehaviour
 
 
     public event Action<int,int,int,int> CheckCell;
+    public event Action ApplyGameOver;
 
     public int RowStage;
     public int ColStage;
-    public int[,] stageState;
-
-
-
-    private void Start()
-    {
-        ///<summary>
-        ///画面に描画する処理：ステージの初期状態を生成
-        ///</summary>
-        for (var i = 0; i < RowStage; i++)
-        {
-            for (var j = 0; j < ColStage; j++)
-            {
-                stageState[i, j] = 0;
-            }
-        }
-        var posA = new Vector2(Random.Range(0, RowStage), Random.Range(0, ColStage));
-        var posB = new Vector2((posA.x + Random.Range(1, RowStage - 1)) % RowStage, (posA.y + Random.Range(1, ColStage - 1)) % ColStage);
-        stageState[(int)posA.x, (int)posA.y] = 2;
-        stageState[(int)posB.x, (int)posB.y] = Random.Range(0, 1.0f) < InGameModel.GenerationRate ? 2 : 4;
-
-        // ステージの初期状態をViewに反映
-        ReflectStage();
-    }
+   
 
     private void Update()
     {
         InputKey();
     }
     
-
-
-        public void SetScore(int score)
+    public void SetScore(int score)
     {
         scoreText.text = $"Score: {score}";
     }
 
-    public void ReflectStage()
+    public void ApplyStage(int[,] stageState)
     {
         for (var i = 0; i < RowStage; i++)
         {
             for (var j = 0; j < ColStage; j++)
             {
-                //これだけViewのaction型変数に置き換えるのが正しい粒度？
                 cells[i * RowStage + j].SetText(stageState[i, j]);
             }
         }
     }
 
+    /// <summary>
+    /// セルをUIに反映する処理
+    /// </summary>
+    public void ApplyUI(int[,] stageState)
+    {
+        ApplyStage(stageState);
+        ApplyGameOver();
+    }
 
 
     private void InputKey()

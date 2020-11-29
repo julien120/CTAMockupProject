@@ -24,13 +24,16 @@ public class  InGamePresenter : MonoBehaviour
         inGameModel.ChangeScore += inGameView.SetScore;
         inGameModel.MoveCell += MoveCell;
         inGameView.CheckCell += inGameModel.CheckCell;
+        inGameView.ApplyGameOver += inGameModel.ApplyGameOverData;
 
-        stageState = inGameModel.stageState;
+
 
         //これで参照元のinGameView.csの変数にも代入されるの？実感が湧かない
         inGameView.RowStage = InGameModel.RowStage;
         inGameView.ColStage = InGameModel.ColStage;
-        inGameView.stageState = stageState;
+        
+
+        inGameView.ApplyStage(inGameModel.stageState);
 
 
     }
@@ -43,7 +46,7 @@ public class  InGamePresenter : MonoBehaviour
         if (isDirty)
         {
             inGameModel.CreateNewRandomCell();
-            ReflectUI();
+            inGameView.ApplyUI(stageState);
         }
 
     }
@@ -93,31 +96,5 @@ public class  InGamePresenter : MonoBehaviour
 
         isDirty = true;
     }
-
-    /// <summary>
-    /// セルをUIに反映する処理
-    /// </summary>
-    private void ReflectUI()
-    {
-        inGameView.ReflectStage();
-
-        if (inGameModel.IsGameOver(stageState))
-        {
-            //score保存自体もmodel?
-            PlayerPrefs.SetInt(PlayerPrefsKeys.ScoreData, inGameModel.GetScore());
-            SceneController.Instance.LoadResultScene();
-        }
-    }
-
-    
-   
-
-    
-
-
-
-
-    
-
 
 }
