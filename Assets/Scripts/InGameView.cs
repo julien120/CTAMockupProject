@@ -2,14 +2,24 @@
 using UnityEngine.UI;
 using System;
 
+/// <summary>
+/// 「Viewは画面の描画やユーザー操作を実装するクラス」
+/// -セルの描画
+/// -スコアの描画
+/// -ユーザーのキー入力と通知
+/// </summary>
 public class InGameView : MonoBehaviour
 {
     [SerializeField] private Cell[] cells;
     [SerializeField] private Text scoreText;
 
-
     public event Action<int,int,int,int> OnCheckCell;
     public event Action OnApplyGameOver;
+
+    public event Action OnInputKeyRight;
+    public event Action OnInputKeyLeft;
+    public event Action OnInputKeyBottom;
+    public event Action OnInputKeyFront;
 
     public int RowStage;
     public int ColStage;
@@ -17,87 +27,52 @@ public class InGameView : MonoBehaviour
 
     private void Update()
     {
-        InputKey();
+        ObserveInputKey();
     }
-    
+
+    /// <summary>
+    /// スコアの描画
+    /// </summary>
+    /// <param name="score"></param>
     public void SetScore(int score)
     {
         scoreText.text = $"Score: {score}";
     }
 
+
     /// <summary>
-    /// stageを描画する
+    /// cells[index]にテキストを表示させる
     /// </summary>
-    public void ApplyStage(int[,] stageStates)
+    /// <param name="index"></param>
+    /// <param name="stageValue"></param>
+    public void Apply(int index ,int stageValue)
     {
-        for (var i = 0; i < RowStage; i++)
-        {
-            for (var j = 0; j < ColStage; j++)
-            {
-                cells[i * RowStage + j].SetText(stageStates[i, j]);
-            }
-        }
+        cells[index].SetText(stageValue);
     }
 
     /// <summary>
-    /// セルをUIに反映する処理
+    /// ユーザーのキー入力
     /// </summary>
-    public void ApplyUI(int[,] stageStates)
-    {
-        ApplyStage(stageStates);
-        OnApplyGameOver();
-    }
-
-    /// <summary>
-    /// userによる入力
-    /// </summary>
-    public void InputKey()
+    ///
+    public void ObserveInputKey()
     {
         if (Input.GetKeyDown(KeyCode.RightArrow))
         {
-            for (var col = ColStage; col >= 0; col--)
-            {
-                for (var row = 0; row < RowStage; row++)
-                {
-                    OnCheckCell(row, col, 1, 0);
-                }
-            }
+            OnInputKeyRight();
         }
-
         else if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            for (var row = 0; row < RowStage; row++)
-            {
-                for (var col = 0; col < ColStage; col++)
-                {
-                    OnCheckCell(row, col, -1, 0);
-                }
-            }
 
+            OnInputKeyLeft();
         }
-
         else if (Input.GetKeyDown(KeyCode.UpArrow))
         {
-            for (var row = 0; row < RowStage; row++)
-            {
-                for (var col = 0; col < ColStage; col++)
-                {
-                    OnCheckCell(row, col, 0, -1);
-                }
-            }
+            OnInputKeyFront();
         }
-
         else if (Input.GetKeyDown(KeyCode.DownArrow))
         {
-            for (var row = RowStage; row >= 0; row--)
-            {
-                for (var col = 0; col < ColStage; col++)
-                {
-                    OnCheckCell(row, col, 0, 1);
-                }
-            }
+            OnInputKeyBottom();
         }
     }
-
 
 }

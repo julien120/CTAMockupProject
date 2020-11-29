@@ -2,21 +2,37 @@
 using System;
 using Random = UnityEngine.Random;
 
+/// <summary>
+/// 「modelはデータ管理・判定処理を担うクラス」
+///  -セルのステート状況を管理
+///  -スコアを管理
+///  -移動できるか判定
+///  -ゲームオーバーか判定
+/// </summary>
 public class InGameModel : MonoBehaviour
 {
-
-    private int score;
-    public event Action<int> OnChangeScore;
-    public event Action<int,int,int,int> OnMoveCell;
-
-    //生成割合のパラメーター
-    public const float GenerationRate = 0.5f;
-
+    /// <summary>
+    /// -セルのステート状況を管理&移動できるか判定
+    /// </summary>
     public readonly int[,] stageStates = new int[RowStage, ColStage];
 
-    //行列の数
+    /// <summary>
+    /// -スコアを管理
+    /// </summary>
+    public int Score { get; private set; }
+
+    public event Action<int> OnChangeScore;
+
+
+    //viewのSetScoreメソッドを引き渡し
+    public event Action<int,int> OnChangedState;
+
+    //生成割合のパラメーター&行列
+    public const float GenerationRate = 0.5f;
     public const int RowStage = 4;
     public const int ColStage = 4;
+
+
 
     ///<summary>
     ///画面に描画する処理：ステージの初期状態を生成
@@ -35,17 +51,45 @@ public class InGameModel : MonoBehaviour
         stageStates[(int)posA.x, (int)posA.y] = 2;
         stageStates[(int)posB.x, (int)posB.y] = Random.Range(0, 1.0f) < GenerationRate ? 2 : 4;
     }
- 
+
+    public void KeyRightValue()
+    {
+        CheckedCell(1,0);
+    }
+    public void KeyleftValue()
+    {
+        CheckedCell(-1,0);
+    }
+    public void KeyBottomValue()
+    {
+        CheckedCell(0,-1);
+    }
+    public void KeyFrontValue()
+    {
+        CheckedCell(0,1);
+    }
+
+    private void CheckedCell(int value,int values)
+    {
+        for (var col = ColStage; col >= 0; col--)
+        {
+            for (var row = 0; row < RowStage; row++)
+            {
+              //  OnCheckCell(row, col, value, values);
+            }
+
+        }
+    }
     /// <summary>
     /// スコアの計算ロジック
     /// </summary>
     /// <param name="cellValue">合成する数値マスの値</param>
     public void SetScore(int cellValue)
     {
-        score += cellValue * 2;
-        OnChangeScore(score);
+        Score += cellValue * 2;
+        OnChangeScore(Score);
     }
-    public int Score { get; private set; }
+    
  
 
     private bool IsGameOver()
@@ -140,7 +184,8 @@ public class InGameModel : MonoBehaviour
             return;
         }
         // 移動可能条件を満たした場合のみ移動処理
-        OnMoveCell(row, column, horizontal, vertical);
+       
+       
     }
 
     public void CreateNewRandomCell()
@@ -167,5 +212,50 @@ public class InGameModel : MonoBehaviour
             PlayerPrefs.SetInt(PlayerPrefsKeys.ScoreData, Score);
             SceneController.Instance.LoadResultScene();
         }
+    }
+
+    private void MoveCell(int row, int column, int horizontal, int vertical)
+    {
+
+        // 4x4境界線チェック
+        // 再起呼び出し以降も毎回境界線チェックはするため冒頭で呼び出しておく
+        if (CheckBorder(row, column, horizontal, vertical) == false)
+        {
+            return;
+        }
+        // 移動先の位置を計算
+        var nextRow = row + vertical;
+        var nextCol = column + horizontal;
+
+        // 移動元と移動先の値を取得
+        var value = stageStates[row, column];
+        var nextValue = stageStates[nextRow, nextCol];
+
+        // 次の移動先のマスが0の場合は移動する
+        if (nextValue == 0)
+        {
+            // 移動元のマスは空欄になるので0を埋める
+            stageStates[row, column] = 0;
+
+            // 移動先のマスに移動元のマスの値を代入する
+            stageStates[nextRow, nextCol] = value;
+
+            // 移動先のマスでさらに移動チェック
+            MoveCell(nextRow, nextCol, horizontal, vertical);
+        }
+        // 同じ値のときは合成処理
+        else if (value == nextValue)
+        {
+            stageStates[row, column] = 0;
+            stageStates[nextRow, nextCol] = value * 2;
+            SetScore(value);
+
+        }
+        // 異なる値のときは移動処理を終了
+        else if (value != nextValue)
+        {
+            return;
+        }
+
     }
 }
