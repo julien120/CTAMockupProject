@@ -12,16 +12,17 @@ public class  InGamePresenter : MonoBehaviour
 
     private void Start()
     {
-        inGameModel.Initialize();
         inGameModel = GetComponent<InGameModel>();
         inGameView = GetComponent<InGameView>();
+        inGameModel.Initialize();
+
 
         // Modelの値の変更を監視する
         inGameModel.ChangeScore += inGameView.SetScore;
         inGameModel.MoveCell += MoveCell;
         inGameView.CheckCell += inGameModel.CheckCell;
         inGameView.ApplyGameOver += inGameModel.ApplyGameOverData;
-
+       
         inGameView.RowStage = InGameModel.RowStage;
         inGameView.ColStage = InGameModel.ColStage;
         
@@ -32,11 +33,12 @@ public class  InGamePresenter : MonoBehaviour
     {
 
         isDirty = false;
-
+        inGameView.InputKey();
         if (isDirty)
         {
             inGameModel.CreateNewRandomCell();
             inGameView.ApplyUI(inGameModel.stageStates);
+            
         }
 
     }

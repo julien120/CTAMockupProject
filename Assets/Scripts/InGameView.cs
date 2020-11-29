@@ -17,7 +17,7 @@ public class InGameView : MonoBehaviour
 
     private void Update()
     {
-        InputKey();
+  
     }
     
     public void SetScore(int score)
@@ -25,13 +25,16 @@ public class InGameView : MonoBehaviour
         scoreText.text = $"Score: {score}";
     }
 
-    public void ApplyStage(int[,] stageState)
+    /// <summary>
+    /// stageを描画する
+    /// </summary>
+    public void ApplyStage(int[,] stageStates)
     {
         for (var i = 0; i < RowStage; i++)
         {
             for (var j = 0; j < ColStage; j++)
             {
-                cells[i * RowStage + j].SetText(stageState[i, j]);
+                cells[i * RowStage + j].SetText(stageStates[i, j]);
             }
         }
     }
@@ -39,14 +42,16 @@ public class InGameView : MonoBehaviour
     /// <summary>
     /// セルをUIに反映する処理
     /// </summary>
-    public void ApplyUI(int[,] stageState)
+    public void ApplyUI(int[,] stageStates)
     {
-        ApplyStage(stageState);
+        ApplyStage(stageStates);
         ApplyGameOver();
     }
 
-
-    private void InputKey()
+    /// <summary>
+    /// userによる入力
+    /// </summary>
+    public void InputKey()
     {
         if (Input.GetKeyDown(KeyCode.RightArrow))
         {

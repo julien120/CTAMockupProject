@@ -48,7 +48,7 @@ public class InGameModel : MonoBehaviour
         ChangeScore(score);
     }
     public int Score { get; private set; }
-
+ 
 
     public bool IsGameOver(int[,] stageState)
     {
@@ -68,6 +68,9 @@ public class InGameModel : MonoBehaviour
         return IsSynthesizeCell(stageState);
     }
 
+    ///<summary>
+    ///セルを合成する
+    ///</summary>
     private bool IsSynthesizeCell(int[,] stageState)
     {
         for (var i = 0; i < RowStage; i++)
