@@ -7,8 +7,9 @@ public class  InGamePresenter : MonoBehaviour
     private InGameView inGameView;
 
    
-    private int RowStage = InGameView.RowStage;
-    private int ColStage = InGameView.ColStage;
+    private int RowStage = InGameModel.RowStage;
+    private int ColStage = InGameModel.ColStage;
+
 
     /// <summary>
     /// 盤面の再描画を行う必要があるかのフラグ
@@ -23,14 +24,21 @@ public class  InGamePresenter : MonoBehaviour
         inGameModel = GetComponent<InGameModel>();
         inGameView = GetComponent<InGameView>();
 
-        stageState = inGameView.stageState;
+        stageState = inGameModel.stageState;
 
         // Modelの値の変更を監視する
-        inGameModel.changeScore += inGameView.SetScore;
+        inGameModel.ChangeScore += inGameView.SetScore;
 
         inGameView.CheckCell += CheckCell;
 
- 
+        //これで参照元のinGameView.csの変数にも代入されるの？実感が湧かない
+        inGameView.RowStage = RowStage;
+        inGameView.ColStage = ColStage;
+        inGameView.stageState = stageState;
+
+
+
+
     }
 
     private void Update()

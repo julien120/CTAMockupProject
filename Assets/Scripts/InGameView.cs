@@ -7,21 +7,21 @@ public class InGameView : MonoBehaviour
 {
     [SerializeField] private Cell[] cells;
     [SerializeField] private Text scoreText;
-    public readonly int[,] stageState = new int[RowStage, ColStage];
 
-    //行列の数
-    public const int RowStage = 4;
-    public const int ColStage = 4;
 
     public event Action<int,int,int,int> CheckCell;
 
-    private InGameModel inGameModel;
+    public int RowStage;
+    public int ColStage;
+    public int[,] stageState;
+
+
 
     private void Start()
     {
-        inGameModel = GetComponent<InGameModel>();
-
-        // ステージの初期状態を生成
+        ///<summary>
+        ///画面に描画する処理：ステージの初期状態を生成
+        ///</summary>
         for (var i = 0; i < RowStage; i++)
         {
             for (var j = 0; j < ColStage; j++)

@@ -5,7 +5,7 @@ public class InGameModel : MonoBehaviour
 {
 
     private int score;
-    public event Action<int> changeScore;
+    public event Action<int> ChangeScore;
 
     private int RowStage = InGameView.RowStage;
     private int ColStage = InGameView.ColStage;
@@ -24,7 +24,7 @@ public class InGameModel : MonoBehaviour
     public void SetScore(int cellValue)
     {
         score += cellValue * 2;
-        changeScore(score);
+        ChangeScore(score);
     }
 
     public int GetScore(){ return score; }
