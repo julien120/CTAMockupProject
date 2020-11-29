@@ -18,10 +18,10 @@ public class  InGamePresenter : MonoBehaviour
 
 
         // Modelの値の変更を監視する
-        inGameModel.ChangeScore += inGameView.SetScore;
-        inGameModel.MoveCell += MoveCell;
-        inGameView.CheckCell += inGameModel.CheckCell;
-        inGameView.ApplyGameOver += inGameModel.ApplyGameOverData;
+        inGameModel.OnChangeScore += inGameView.SetScore;
+        inGameModel.OnMoveCell += MoveCell;
+        inGameView.OnCheckCell += inGameModel.CheckCell;
+        inGameView.OnApplyGameOver += inGameModel.ApplyGameOverData;
        
         inGameView.RowStage = InGameModel.RowStage;
         inGameView.ColStage = InGameModel.ColStage;

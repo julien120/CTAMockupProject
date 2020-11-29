@@ -8,8 +8,8 @@ public class InGameView : MonoBehaviour
     [SerializeField] private Text scoreText;
 
 
-    public event Action<int,int,int,int> CheckCell;
-    public event Action ApplyGameOver;
+    public event Action<int,int,int,int> OnCheckCell;
+    public event Action OnApplyGameOver;
 
     public int RowStage;
     public int ColStage;
@@ -45,7 +45,7 @@ public class InGameView : MonoBehaviour
     public void ApplyUI(int[,] stageStates)
     {
         ApplyStage(stageStates);
-        ApplyGameOver();
+        OnApplyGameOver();
     }
 
     /// <summary>
@@ -59,7 +59,7 @@ public class InGameView : MonoBehaviour
             {
                 for (var row = 0; row < RowStage; row++)
                 {
-                    CheckCell(row, col, 1, 0);
+                    OnCheckCell(row, col, 1, 0);
                 }
             }
         }
@@ -70,7 +70,7 @@ public class InGameView : MonoBehaviour
             {
                 for (var col = 0; col < ColStage; col++)
                 {
-                    CheckCell(row, col, -1, 0);
+                    OnCheckCell(row, col, -1, 0);
                 }
             }
 
@@ -82,7 +82,7 @@ public class InGameView : MonoBehaviour
             {
                 for (var col = 0; col < ColStage; col++)
                 {
-                    CheckCell(row, col, 0, -1);
+                    OnCheckCell(row, col, 0, -1);
                 }
             }
         }
@@ -93,7 +93,7 @@ public class InGameView : MonoBehaviour
             {
                 for (var col = 0; col < ColStage; col++)
                 {
-                    CheckCell(row, col, 0, 1);
+                    OnCheckCell(row, col, 0, 1);
                 }
             }
         }

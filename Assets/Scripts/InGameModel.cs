@@ -6,8 +6,8 @@ public class InGameModel : MonoBehaviour
 {
 
     private int score;
-    public event Action<int> ChangeScore;
-    public event Action<int,int,int,int> MoveCell;
+    public event Action<int> OnChangeScore;
+    public event Action<int,int,int,int> OnMoveCell;
 
     //生成割合のパラメーター
     public const float GenerationRate = 0.5f;
@@ -45,19 +45,19 @@ public class InGameModel : MonoBehaviour
     public void SetScore(int cellValue)
     {
         score += cellValue * 2;
-        ChangeScore(score);
+        OnChangeScore(score);
     }
     public int Score { get; private set; }
  
 
-    public bool IsGameOver(int[,] stageState)
+    private bool isGameOver()
     {
         // 空いている場所があればゲームオーバーにはならない
         for (var i = 0; i < RowStage; i++)
         {
-            for (var j = 0; j < stageState.GetLength(1); j++)
+            for (var j = 0; j < stageStates.GetLength(1); j++)
             {
-                if (stageState[i, j] <= 0)
+                if (stageStates[i, j] <= 0)
                 {
                     return false;
                 }
@@ -65,7 +65,7 @@ public class InGameModel : MonoBehaviour
         }
 
         // 合成可能なマスが一つでもあればゲームオーバーにはならない
-        return IsSynthesizeCell(stageState);
+        return IsSynthesizeCell(stageStates);
     }
 
     ///<summary>
@@ -142,13 +142,13 @@ public class InGameModel : MonoBehaviour
             return;
         }
         // 移動可能条件を満たした場合のみ移動処理
-        MoveCell(row, column, horizontal, vertical);
+        OnMoveCell(row, column, horizontal, vertical);
     }
 
     public void CreateNewRandomCell()
     {
         // ゲーム終了時はスポーンしない
-        if (IsGameOver(stageStates))
+        if (isGameOver())
         {
             return;
         }
@@ -164,7 +164,7 @@ public class InGameModel : MonoBehaviour
 
     public void ApplyGameOverData()
     {
-        if (IsGameOver(stageStates))
+        if (isGameOver())
         {
             PlayerPrefs.SetInt(PlayerPrefsKeys.ScoreData, Score);
             SceneController.Instance.LoadResultScene();
