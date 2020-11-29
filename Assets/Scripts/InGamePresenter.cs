@@ -33,16 +33,12 @@ public class  InGamePresenter : MonoBehaviour
     {
 
         isDirty = false;
-        inGameView.InputKey();
         if (isDirty)
         {
             inGameModel.CreateNewRandomCell();
-            inGameView.ApplyUI(inGameModel.stageStates);
-            
+            inGameView.ApplyUI(inGameModel.stageStates); 
         }
-
     }
-
 
     private void MoveCell(int row, int column, int horizontal, int vertical)
     {

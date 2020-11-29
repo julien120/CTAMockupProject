@@ -17,7 +17,7 @@ public class InGameView : MonoBehaviour
 
     private void Update()
     {
-  
+        InputKey();
     }
     
     public void SetScore(int score)

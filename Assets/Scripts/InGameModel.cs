@@ -18,11 +18,11 @@ public class InGameModel : MonoBehaviour
     public const int RowStage = 4;
     public const int ColStage = 4;
 
+    ///<summary>
+    ///画面に描画する処理：ステージの初期状態を生成
+    ///</summary>
     public void Initialize()
     {
-        ///<summary>
-        ///画面に描画する処理：ステージの初期状態を生成
-        ///</summary>
         for (var i = 0; i < RowStage; i++)
         {
             for (var j = 0; j < ColStage; j++)
@@ -35,9 +35,7 @@ public class InGameModel : MonoBehaviour
         stageStates[(int)posA.x, (int)posA.y] = 2;
         stageStates[(int)posB.x, (int)posB.y] = Random.Range(0, 1.0f) < GenerationRate ? 2 : 4;
     }
-
-
-   
+ 
     /// <summary>
     /// スコアの計算ロジック
     /// </summary>
@@ -50,12 +48,12 @@ public class InGameModel : MonoBehaviour
     public int Score { get; private set; }
  
 
-    private bool isGameOver()
+    private bool IsGameOver()
     {
         // 空いている場所があればゲームオーバーにはならない
         for (var i = 0; i < RowStage; i++)
         {
-            for (var j = 0; j < stageStates.GetLength(1); j++)
+            for (var j = 0; j < ColStage; j++)
             {
                 if (stageStates[i, j] <= 0)
                 {
@@ -148,7 +146,7 @@ public class InGameModel : MonoBehaviour
     public void CreateNewRandomCell()
     {
         // ゲーム終了時はスポーンしない
-        if (isGameOver())
+        if (IsGameOver())
         {
             return;
         }
@@ -164,7 +162,7 @@ public class InGameModel : MonoBehaviour
 
     public void ApplyGameOverData()
     {
-        if (isGameOver())
+        if (IsGameOver())
         {
             PlayerPrefs.SetInt(PlayerPrefsKeys.ScoreData, Score);
             SceneController.Instance.LoadResultScene();
