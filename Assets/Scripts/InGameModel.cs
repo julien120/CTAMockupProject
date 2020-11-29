@@ -7,14 +7,18 @@ public class InGameModel : MonoBehaviour
     private int score;
     public event Action<int> ChangeScore;
 
-    private int RowStage = InGameView.RowStage;
-    private int ColStage = InGameView.ColStage;
 
     //生成割合のパラメーター
     public const float GenerationRate = 0.5f;
 
-    
-    
+    public readonly int[,] stageState = new int[RowStage, ColStage];
+
+    //行列の数
+    public const int RowStage = 4;
+    public const int ColStage = 4;
+
+
+
 
 
     /// <summary>
@@ -32,7 +36,7 @@ public class InGameModel : MonoBehaviour
     public bool IsGameOver(int[,] stageState)
     {
         // 空いている場所があればゲームオーバーにはならない
-        for (var i = 0; i < InGameView.RowStage; i++)
+        for (var i = 0; i < RowStage; i++)
         {
             for (var j = 0; j < stageState.GetLength(1); j++)
             {
