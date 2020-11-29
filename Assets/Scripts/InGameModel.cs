@@ -1,12 +1,13 @@
 ﻿using UnityEngine;
 using System;
+using Random = UnityEngine.Random;
 
 public class InGameModel : MonoBehaviour
 {
 
     private int score;
     public event Action<int> ChangeScore;
-
+    public event Action<int,int,int,int> MoveCell;
 
     //生成割合のパラメーター
     public const float GenerationRate = 0.5f;
@@ -16,10 +17,6 @@ public class InGameModel : MonoBehaviour
     //行列の数
     public const int RowStage = 4;
     public const int ColStage = 4;
-
-
-
-
 
     /// <summary>
     /// スコアの計算ロジック
@@ -86,6 +83,61 @@ public class InGameModel : MonoBehaviour
             }
         }
         return true;
+    }
+
+    //判定系もmodel?
+    public bool CheckBorder(int row, int column, int horizontal, int vertical)
+    {
+
+        // チェックマスが4x4外ならそれ以上処理を行わない
+        if (row < 0 || row >= RowStage || column < 0 || column >= ColStage)
+        {
+            return false;
+        }
+
+        // 移動先が4x4外ならそれ以上処理は行わない
+        var nextRow = row + vertical;
+        var nextCol = column + horizontal;
+        if (nextRow < 0 || nextRow >= RowStage || nextCol < 0 || nextCol >= ColStage)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    public void CheckCell(int row, int column, int horizontal, int vertical)
+    {
+        // 4x4の境界線チェック
+        if (CheckBorder(row, column, horizontal, vertical) == false)
+        {
+            return;
+        }
+        // 空欄マスは移動処理をしない
+        if (stageState[row, column] == 0)
+        {
+            return;
+        }
+        // 移動可能条件を満たした場合のみ移動処理
+        MoveCell(row, column, horizontal, vertical);
+    }
+
+    public void CreateNewRandomCell()
+    {
+        // ゲーム終了時はスポーンしない
+        if (IsGameOver(stageState))
+        {
+            return;
+        }
+        var row = Random.Range(0, RowStage);
+        var col = Random.Range(0, ColStage);
+        while (stageState[row, col] != 0)
+        {
+            row = Random.Range(0, RowStage);
+            col = Random.Range(0, ColStage);
+        }
+
+        stageState[row, col] = Random.Range(0, 1f) < InGameModel.GenerationRate ? 2 : 4;
     }
 
 
