@@ -158,7 +158,6 @@ public class InGameModel : MonoBehaviour
             row = Random.Range(0, RowStage);
             col = Random.Range(0, ColStage);
         }
-
         stageState[row, col] = Random.Range(0, 1f) < InGameModel.GenerationRate ? 2 : 4;
     }
 

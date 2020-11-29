@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class  InGamePresenter : MonoBehaviour
 {
@@ -14,7 +13,7 @@ public class  InGamePresenter : MonoBehaviour
 
     private int[,] stageState;
 
-    private void Start()
+    private void initialize()
     {
         
         inGameModel = GetComponent<InGameModel>();
@@ -34,8 +33,6 @@ public class  InGamePresenter : MonoBehaviour
         
 
         inGameView.ApplyStage(inGameModel.stageState);
-
-
     }
 
     private void Update()

@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System;
-using Random = UnityEngine.Random;
 
 public class InGameView : MonoBehaviour
 {
