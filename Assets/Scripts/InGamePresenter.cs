@@ -12,7 +12,7 @@ public class  InGamePresenter : MonoBehaviour
 
     private void Start()
     {
-        inGameModel.initialize();
+        inGameModel.Initialize();
         inGameModel = GetComponent<InGameModel>();
         inGameView = GetComponent<InGameView>();
 
@@ -25,7 +25,7 @@ public class  InGamePresenter : MonoBehaviour
         inGameView.RowStage = InGameModel.RowStage;
         inGameView.ColStage = InGameModel.ColStage;
         
-        inGameView.ApplyStage(inGameModel.stageState);
+        inGameView.ApplyStage(inGameModel.stageStates);
     }
 
     private void Update()
@@ -36,7 +36,7 @@ public class  InGamePresenter : MonoBehaviour
         if (isDirty)
         {
             inGameModel.CreateNewRandomCell();
-            inGameView.ApplyUI(inGameModel.stageState);
+            inGameView.ApplyUI(inGameModel.stageStates);
         }
 
     }
@@ -55,17 +55,17 @@ public class  InGamePresenter : MonoBehaviour
         var nextCol = column + horizontal;
 
         // 移動元と移動先の値を取得
-        var value = inGameModel.stageState[row, column];
-        var nextValue = inGameModel.stageState[nextRow, nextCol];
+        var value = inGameModel.stageStates[row, column];
+        var nextValue = inGameModel.stageStates[nextRow, nextCol];
 
         // 次の移動先のマスが0の場合は移動する
         if (nextValue == 0)
         {
             // 移動元のマスは空欄になるので0を埋める
-            inGameModel.stageState[row, column] = 0;
+            inGameModel.stageStates[row, column] = 0;
 
             // 移動先のマスに移動元のマスの値を代入する
-            inGameModel.stageState[nextRow, nextCol] = value;
+            inGameModel.stageStates[nextRow, nextCol] = value;
 
             // 移動先のマスでさらに移動チェック
             MoveCell(nextRow, nextCol, horizontal, vertical);
@@ -73,8 +73,8 @@ public class  InGamePresenter : MonoBehaviour
         // 同じ値のときは合成処理
         else if (value == nextValue)
         {
-            inGameModel.stageState[row, column] = 0;
-            inGameModel.stageState[nextRow, nextCol] = value * 2;
+            inGameModel.stageStates[row, column] = 0;
+            inGameModel.stageStates[nextRow, nextCol] = value * 2;
             inGameModel.SetScore(value);
 
         }

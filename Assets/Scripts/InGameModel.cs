@@ -12,16 +12,13 @@ public class InGameModel : MonoBehaviour
     //生成割合のパラメーター
     public const float GenerationRate = 0.5f;
 
-    public readonly int[,] stageState = new int[RowStage, ColStage];
+    public readonly int[,] stageStates = new int[RowStage, ColStage];
 
     //行列の数
     public const int RowStage = 4;
     public const int ColStage = 4;
 
-
-
-
-    public void initialize()
+    public void Initialize()
     {
         ///<summary>
         ///画面に描画する処理：ステージの初期状態を生成
@@ -30,16 +27,17 @@ public class InGameModel : MonoBehaviour
         {
             for (var j = 0; j < ColStage; j++)
             {
-                stageState[i, j] = 0;
+                stageStates[i, j] = 0;
             }
         }
         var posA = new Vector2(Random.Range(0, RowStage), Random.Range(0, ColStage));
         var posB = new Vector2((posA.x + Random.Range(1, RowStage - 1)) % RowStage, (posA.y + Random.Range(1, ColStage - 1)) % ColStage);
-        stageState[(int)posA.x, (int)posA.y] = 2;
-        stageState[(int)posB.x, (int)posB.y] = Random.Range(0, 1.0f) < GenerationRate ? 2 : 4;
+        stageStates[(int)posA.x, (int)posA.y] = 2;
+        stageStates[(int)posB.x, (int)posB.y] = Random.Range(0, 1.0f) < GenerationRate ? 2 : 4;
     }
 
 
+   
     /// <summary>
     /// スコアの計算ロジック
     /// </summary>
@@ -49,8 +47,8 @@ public class InGameModel : MonoBehaviour
         score += cellValue * 2;
         ChangeScore(score);
     }
+    public int Score { get; private set; }
 
-    public int GetScore(){ return score; }
 
     public bool IsGameOver(int[,] stageState)
     {
@@ -136,7 +134,7 @@ public class InGameModel : MonoBehaviour
             return;
         }
         // 空欄マスは移動処理をしない
-        if (stageState[row, column] == 0)
+        if (stageStates[row, column] == 0)
         {
             return;
         }
@@ -147,25 +145,25 @@ public class InGameModel : MonoBehaviour
     public void CreateNewRandomCell()
     {
         // ゲーム終了時はスポーンしない
-        if (IsGameOver(stageState))
+        if (IsGameOver(stageStates))
         {
             return;
         }
         var row = Random.Range(0, RowStage);
         var col = Random.Range(0, ColStage);
-        while (stageState[row, col] != 0)
+        while (stageStates[row, col] != 0)
         {
             row = Random.Range(0, RowStage);
             col = Random.Range(0, ColStage);
         }
-        stageState[row, col] = Random.Range(0, 1f) < InGameModel.GenerationRate ? 2 : 4;
+        stageStates[row, col] = Random.Range(0, 1f) < InGameModel.GenerationRate ? 2 : 4;
     }
 
     public void ApplyGameOverData()
     {
-        if (IsGameOver(stageState))
+        if (IsGameOver(stageStates))
         {
-            PlayerPrefs.SetInt(PlayerPrefsKeys.ScoreData, GetScore());
+            PlayerPrefs.SetInt(PlayerPrefsKeys.ScoreData, Score);
             SceneController.Instance.LoadResultScene();
         }
     }
