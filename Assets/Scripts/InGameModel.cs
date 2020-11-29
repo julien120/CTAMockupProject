@@ -21,7 +21,7 @@ public class InGameModel : MonoBehaviour
 
 
 
-    private void Start()
+    private void initialize()
     {
         ///<summary>
         ///画面に描画する処理：ステージの初期状態を生成
