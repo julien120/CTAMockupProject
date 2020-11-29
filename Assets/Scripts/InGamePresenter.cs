@@ -5,15 +5,12 @@ public class  InGamePresenter : MonoBehaviour
     private InGameModel inGameModel;
     private InGameView inGameView;
 
-
     /// <summary>
     /// 盤面の再描画を行う必要があるかのフラグ
     /// </summary>
     private bool isDirty;
 
-    private int[,] stageState;
-
-    private void initialize()
+    private void Start()
     {
         
         inGameModel = GetComponent<InGameModel>();
@@ -25,14 +22,11 @@ public class  InGamePresenter : MonoBehaviour
         inGameView.CheckCell += inGameModel.CheckCell;
         inGameView.ApplyGameOver += inGameModel.ApplyGameOverData;
 
-
-
-        //これで参照元のinGameView.csの変数にも代入されるの？実感が湧かない
         inGameView.RowStage = InGameModel.RowStage;
         inGameView.ColStage = InGameModel.ColStage;
         
-
         inGameView.ApplyStage(inGameModel.stageState);
+        inGameModel.initialize();
     }
 
     private void Update()
@@ -43,7 +37,7 @@ public class  InGamePresenter : MonoBehaviour
         if (isDirty)
         {
             inGameModel.CreateNewRandomCell();
-            inGameView.ApplyUI(stageState);
+            inGameView.ApplyUI(inGameModel.stageState);
         }
 
     }
@@ -62,17 +56,17 @@ public class  InGamePresenter : MonoBehaviour
         var nextCol = column + horizontal;
 
         // 移動元と移動先の値を取得
-        var value = stageState[row, column];
-        var nextValue = stageState[nextRow, nextCol];
+        var value = inGameModel.stageState[row, column];
+        var nextValue = inGameModel.stageState[nextRow, nextCol];
 
         // 次の移動先のマスが0の場合は移動する
         if (nextValue == 0)
         {
             // 移動元のマスは空欄になるので0を埋める
-            stageState[row, column] = 0;
+            inGameModel.stageState[row, column] = 0;
 
             // 移動先のマスに移動元のマスの値を代入する
-            stageState[nextRow, nextCol] = value;
+            inGameModel.stageState[nextRow, nextCol] = value;
 
             // 移動先のマスでさらに移動チェック
             MoveCell(nextRow, nextCol, horizontal, vertical);
@@ -80,8 +74,8 @@ public class  InGamePresenter : MonoBehaviour
         // 同じ値のときは合成処理
         else if (value == nextValue)
         {
-            stageState[row, column] = 0;
-            stageState[nextRow, nextCol] = value * 2;
+            inGameModel.stageState[row, column] = 0;
+            inGameModel.stageState[nextRow, nextCol] = value * 2;
             inGameModel.SetScore(value);
 
         }
