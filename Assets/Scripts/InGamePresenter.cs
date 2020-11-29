@@ -12,7 +12,7 @@ public class  InGamePresenter : MonoBehaviour
 
     private void Start()
     {
-        
+        inGameModel.initialize();
         inGameModel = GetComponent<InGameModel>();
         inGameView = GetComponent<InGameView>();
 
@@ -26,7 +26,6 @@ public class  InGamePresenter : MonoBehaviour
         inGameView.ColStage = InGameModel.ColStage;
         
         inGameView.ApplyStage(inGameModel.stageState);
-        inGameModel.initialize();
     }
 
     private void Update()
