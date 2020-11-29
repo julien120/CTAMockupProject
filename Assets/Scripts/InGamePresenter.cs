@@ -11,7 +11,6 @@ public class  InGamePresenter : MonoBehaviour
     private InGameModel inGameModel;
     private InGameView inGameView;
 
-
     private void Start()
     {
         inGameModel = GetComponent<InGameModel>();
@@ -31,5 +30,4 @@ public class  InGamePresenter : MonoBehaviour
         inGameModel.OnChangeScore += inGameView.SetScore;
         inGameModel.OnChangedState += inGameView.Apply;
     }
-
 }

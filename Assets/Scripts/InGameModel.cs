@@ -54,30 +54,36 @@ public class InGameModel : MonoBehaviour
 
     public void KeyRightValue()
     {
+        // TODO: 名前を変える
+        // TODO: 右方向の入力に対して全マスの移動を試みる
         CheckedCell(1,0);
     }
     public void KeyleftValue()
     {
+        // TODO: 左方向の入力に対して全マスの移動を試みる
         CheckedCell(-1,0);
     }
     public void KeyBottomValue()
     {
+        // TODO: 下方向の入力に対して全マスの移動を試みる
         CheckedCell(0,-1);
     }
     public void KeyFrontValue()
     {
+        // TODO: 上方向の入力に対して全マスの移動を試みる
         CheckedCell(0,1);
     }
 
     private void CheckedCell(int value,int values)
     {
+        // TODO: ステージの状態に変化があれば、OnChangedStateを呼び出してあげる
         for (var col = ColStage; col >= 0; col--)
         {
             for (var row = 0; row < RowStage; row++)
             {
               //  OnCheckCell(row, col, value, values);
+              // TODO: 各マスに対してMoveCellしてあげる
             }
-
         }
     }
     /// <summary>
@@ -216,7 +222,6 @@ public class InGameModel : MonoBehaviour
 
     private void MoveCell(int row, int column, int horizontal, int vertical)
     {
-
         // 4x4境界線チェック
         // 再起呼び出し以降も毎回境界線チェックはするため冒頭で呼び出しておく
         if (CheckBorder(row, column, horizontal, vertical) == false)
@@ -256,6 +261,5 @@ public class InGameModel : MonoBehaviour
         {
             return;
         }
-
     }
 }
