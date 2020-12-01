@@ -61,13 +61,13 @@ public class InGameModel : MonoBehaviour
             {
                 OnChangedState(i * RowStage + j, stageStates[i, j]);
             }
-        }
+        }ApplyGameOverData();
     }
 
     public void KeyRightValue()
     {
         isDirty = false;
-       
+        // TODO: 左方向の入力に対して全マスの移動を試みる
         for (var col = ColStage; col >= 0; col--)
         {
             for (var row = 0; row < RowStage; row++)
@@ -77,7 +77,6 @@ public class InGameModel : MonoBehaviour
         }
         if (isDirty)
         {
-            Debug.Log("trueになってる");
             CreateNewRandomCell();
             //indexとstageValueに当たる引数は何か?
             for (var i = 0; i < RowStage; i++)
@@ -89,6 +88,7 @@ public class InGameModel : MonoBehaviour
             }
             ApplyGameOverData();
         }
+
     }
     public void KeyleftValue()
     {
@@ -119,11 +119,11 @@ public class InGameModel : MonoBehaviour
     {
         isDirty = false;
         // TODO: 下方向の入力に対して全マスの移動を試みる
-        for (var row = 0; row < RowStage; row++)
+        for (var row = RowStage; row >= 0; row--)
         {
             for (var col = 0; col < ColStage; col++)
             {
-                CheckCell(row, col, 0, -1);
+                CheckCell(row, col, 0, 1);
             }
         }
         if (isDirty)
@@ -145,11 +145,11 @@ public class InGameModel : MonoBehaviour
         isDirty = false;
         // TODO: ステージの状態に変化があれば、OnChangedStateを呼び出してあげる
         // TODO: 上方向の入力に対して全マスの移動を試みる
-        for (var row = RowStage; row >= 0; row--)
+        for (var row = 0; row < RowStage; row++)
         {
             for (var col = 0; col < ColStage; col++)
             {
-                CheckCell(row, col, 0, 1);
+                CheckCell(row, col, 0, -1);
                 // TODO: 各マスに対してMoveCellしてあげる
             }
         }
