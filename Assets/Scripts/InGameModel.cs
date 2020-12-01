@@ -83,6 +83,7 @@ public class InGameModel : MonoBehaviour
             {
                 for (var j = 0; j < ColStage; j++)
                 {
+                    Debug.Log(i * RowStage + j +"と"+ stageStates[i, j]);
                     OnChangedState(i * RowStage + j, stageStates[i, j]);
                 }
             }
