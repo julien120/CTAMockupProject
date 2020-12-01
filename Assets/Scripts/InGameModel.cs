@@ -12,19 +12,19 @@ using Random = UnityEngine.Random;
 public class InGameModel : MonoBehaviour
 {
     //生成割合のパラメーター&行列
-    public const float GenerationRate = 0.5f;
-    public const int RowStage = 4;
-    public const int ColStage = 4;
+    private const float generationRate = 0.5f;
+    private const int rowStage = 4;
+    private const int colStage = 4;
 
     /// <summary>
     /// -セルのステート状況を管理&移動できるか判定
     /// </summary>
-    public readonly int[,] stageStates = new int[RowStage, ColStage];
+    private readonly int[,] stageStates = new int[rowStage, colStage];
 
     /// <summary>
     /// -スコアを管理
     /// </summary>
-    public int Score { get; private set; }
+    private int score { get; set; }
 
     public event Action<int> OnChangeScore;
 
@@ -41,36 +41,37 @@ public class InGameModel : MonoBehaviour
     ///</summary>
     public void Initialize()
     {
-        for (var i = 0; i < RowStage; i++)
+        for (var i = 0; i < rowStage; i++)
         {
-            for (var j = 0; j < ColStage; j++)
+            for (var j = 0; j < colStage; j++)
             {
                 stageStates[i, j] = 0;
             }
         }
-        var posA = new Vector2(Random.Range(0, RowStage), Random.Range(0, ColStage));
-        var posB = new Vector2((posA.x + Random.Range(1, RowStage - 1)) % RowStage, (posA.y + Random.Range(1, ColStage - 1)) % ColStage);
+        var posA = new Vector2(Random.Range(0, rowStage), Random.Range(0, colStage));
+        var posB = new Vector2((posA.x + Random.Range(1, rowStage - 1)) % rowStage, (posA.y + Random.Range(1, colStage - 1)) % colStage);
         stageStates[(int)posA.x, (int)posA.y] = 2;
-        stageStates[(int)posB.x, (int)posB.y] = Random.Range(0, 1.0f) < GenerationRate ? 2 : 4;
+        stageStates[(int)posB.x, (int)posB.y] = Random.Range(0, 1.0f) < generationRate ? 2 : 4;
         //TODO:最初の初期生成
         //4*4あるうちのひとます
         //OnChangedState(RowStage * RowStage + ColStage, stageStates[RowStage, ColStage]);
-        for (var i = 0; i < RowStage; i++)
+        for (var i = 0; i < rowStage; i++)
         {
-            for (var j = 0; j < ColStage; j++)
+            for (var j = 0; j < colStage; j++)
             {
-                OnChangedState(i * RowStage + j, stageStates[i, j]);
+                OnChangedState(i * rowStage + j, stageStates[i, j]);
             }
-        }ApplyGameOverData();
+        }
+        ApplyGameOverData();
     }
 
     public void KeyRightValue()
     {
         isDirty = false;
         // TODO: 左方向の入力に対して全マスの移動を試みる
-        for (var col = ColStage; col >= 0; col--)
+        for (var col = colStage; col >= 0; col--)
         {
-            for (var row = 0; row < RowStage; row++)
+            for (var row = 0; row < rowStage; row++)
             {
                 CheckCell(row, col, 1, 0);
             }
@@ -79,12 +80,12 @@ public class InGameModel : MonoBehaviour
         {
             CreateNewRandomCell();
             //indexとstageValueに当たる引数は何か?
-            for (var i = 0; i < RowStage; i++)
+            for (var i = 0; i < rowStage; i++)
             {
-                for (var j = 0; j < ColStage; j++)
+                for (var j = 0; j < colStage; j++)
                 {
-                    Debug.Log(i * RowStage + j +"と"+ stageStates[i, j]);
-                    OnChangedState(i * RowStage + j, stageStates[i, j]);
+                    Debug.Log(i * rowStage + j +"と"+ stageStates[i, j]);
+                    OnChangedState(i * rowStage + j, stageStates[i, j]);
                 }
             }
             ApplyGameOverData();
@@ -95,9 +96,9 @@ public class InGameModel : MonoBehaviour
     {
         isDirty = false;
         // TODO: 左方向の入力に対して全マスの移動を試みる
-        for (var row = 0; row < RowStage; row++)
+        for (var row = 0; row < rowStage; row++)
         {
-            for (var col = 0; col < ColStage; col++)
+            for (var col = 0; col < colStage; col++)
             {
                 CheckCell(row, col, -1, 0);
             }
@@ -106,11 +107,11 @@ public class InGameModel : MonoBehaviour
         {
             CreateNewRandomCell();
             //indexとstageValueに当たる引数は何か?
-            for (var i = 0; i < RowStage; i++)
+            for (var i = 0; i < rowStage; i++)
             {
-                for (var j = 0; j < ColStage; j++)
+                for (var j = 0; j < colStage; j++)
                 {
-                    OnChangedState(i * RowStage + j, stageStates[i, j]);
+                    OnChangedState(i * rowStage + j, stageStates[i, j]);
                 }
             }
             ApplyGameOverData();
@@ -120,9 +121,9 @@ public class InGameModel : MonoBehaviour
     {
         isDirty = false;
         // TODO: 下方向の入力に対して全マスの移動を試みる
-        for (var row = RowStage; row >= 0; row--)
+        for (var row = rowStage; row >= 0; row--)
         {
-            for (var col = 0; col < ColStage; col++)
+            for (var col = 0; col < colStage; col++)
             {
                 CheckCell(row, col, 0, 1);
             }
@@ -131,11 +132,11 @@ public class InGameModel : MonoBehaviour
         {
             CreateNewRandomCell();
             //indexとstageValueに当たる引数は何か?
-            for (var i = 0; i < RowStage; i++)
+            for (var i = 0; i < rowStage; i++)
             {
-                for (var j = 0; j < ColStage; j++)
+                for (var j = 0; j < colStage; j++)
                 {
-                    OnChangedState(i * RowStage + j, stageStates[i, j]);
+                    OnChangedState(i * rowStage + j, stageStates[i, j]);
                 }
             }
             ApplyGameOverData();
@@ -146,9 +147,9 @@ public class InGameModel : MonoBehaviour
         isDirty = false;
         // TODO: ステージの状態に変化があれば、OnChangedStateを呼び出してあげる
         // TODO: 上方向の入力に対して全マスの移動を試みる
-        for (var row = 0; row < RowStage; row++)
+        for (var row = 0; row < rowStage; row++)
         {
-            for (var col = 0; col < ColStage; col++)
+            for (var col = 0; col < colStage; col++)
             {
                 CheckCell(row, col, 0, -1);
                 // TODO: 各マスに対してMoveCellしてあげる
@@ -159,11 +160,11 @@ public class InGameModel : MonoBehaviour
         {
             CreateNewRandomCell();
             //indexとstageValueに当たる引数は何か?
-            for (var i = 0; i < RowStage; i++)
+            for (var i = 0; i < rowStage; i++)
             {
-                for (var j = 0; j < ColStage; j++)
+                for (var j = 0; j < colStage; j++)
                 {
-                    OnChangedState(i * RowStage + j, stageStates[i, j]);
+                    OnChangedState(i * rowStage + j, stageStates[i, j]);
                 }
             }
             ApplyGameOverData();
@@ -177,8 +178,8 @@ public class InGameModel : MonoBehaviour
     /// <param name="cellValue">合成する数値マスの値</param>
     public void SetScore(int cellValue)
     {
-        Score += cellValue * 2;
-        OnChangeScore(Score);
+        score += cellValue * 2;
+        OnChangeScore(score);
     }
     
  
@@ -186,9 +187,9 @@ public class InGameModel : MonoBehaviour
     private bool IsGameOver()
     {
         // 空いている場所があればゲームオーバーにはならない
-        for (var i = 0; i < RowStage; i++)
+        for (var i = 0; i < rowStage; i++)
         {
-            for (var j = 0; j < ColStage; j++)
+            for (var j = 0; j < colStage; j++)
             {
                 if (stageStates[i, j] <= 0)
                 {
@@ -206,9 +207,9 @@ public class InGameModel : MonoBehaviour
     ///</summary>
     private bool IsSynthesizeCell(int[,] stageStates)
     {
-        for (var i = 0; i < RowStage; i++)
+        for (var i = 0; i < rowStage; i++)
         {
-            for (var j = 0; j < ColStage; j++)
+            for (var j = 0; j < colStage; j++)
             {
                 var state = stageStates[i, j];
                 var canMerge = false;
@@ -217,7 +218,7 @@ public class InGameModel : MonoBehaviour
                     canMerge |= state == stageStates[i - 1, j];
                 }
 
-                if (i < RowStage - 1)
+                if (i < rowStage - 1)
                 {
                     canMerge |= state == stageStates[i + 1, j];
                 }
@@ -227,7 +228,7 @@ public class InGameModel : MonoBehaviour
                     canMerge |= state == stageStates[i, j - 1];
                 }
 
-                if (j < ColStage - 1)
+                if (j < colStage - 1)
                 {
                     canMerge |= state == stageStates[i, j + 1];
                 }
@@ -241,12 +242,11 @@ public class InGameModel : MonoBehaviour
         return true;
     }
 
-    //判定系もmodel?
     public bool CheckBorder(int row, int column, int horizontal, int vertical)
     {
 
         // チェックマスが4x4外ならそれ以上処理を行わない
-        if (row < 0 || row >= RowStage || column < 0 || column >= ColStage)
+        if (row < 0 || row >= rowStage || column < 0 || column >= colStage)
         {
             return false;
         }
@@ -254,7 +254,7 @@ public class InGameModel : MonoBehaviour
         // 移動先が4x4外ならそれ以上処理は行わない
         var nextRow = row + vertical;
         var nextCol = column + horizontal;
-        if (nextRow < 0 || nextRow >= RowStage || nextCol < 0 || nextCol >= ColStage)
+        if (nextRow < 0 || nextRow >= rowStage || nextCol < 0 || nextCol >= colStage)
         {
             return false;
         }
@@ -286,21 +286,21 @@ public class InGameModel : MonoBehaviour
         {
             return;
         }
-        var row = Random.Range(0, RowStage);
-        var col = Random.Range(0, ColStage);
+        var row = Random.Range(0, rowStage);
+        var col = Random.Range(0, colStage);
         while (stageStates[row, col] != 0)
         {
-            row = Random.Range(0, RowStage);
-            col = Random.Range(0, ColStage);
+            row = Random.Range(0, rowStage);
+            col = Random.Range(0, colStage);
         }
-        stageStates[row, col] = Random.Range(0, 1f) < InGameModel.GenerationRate ? 2 : 4;
+        stageStates[row, col] = Random.Range(0, 1f) < InGameModel.generationRate ? 2 : 4;
     }
 
     public void ApplyGameOverData()
     {
         if (IsGameOver())
         {
-            PlayerPrefs.SetInt(PlayerPrefsKeys.ScoreData, Score);
+            PlayerPrefs.SetInt(PlayerPrefsKeys.ScoreData, score);
             SceneController.Instance.LoadResultScene();
         }
     }
