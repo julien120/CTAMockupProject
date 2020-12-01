@@ -15,8 +15,6 @@ public class  InGamePresenter : MonoBehaviour
     {
         inGameModel = GetComponent<InGameModel>();
         inGameView = GetComponent<InGameView>();
-        inGameModel.Initialize();
-
 
         // Modelの値の変更を監視する
 
@@ -29,5 +27,8 @@ public class  InGamePresenter : MonoBehaviour
         //modelのスコア判定をviewに伝え、描画する
         inGameModel.OnChangeScore += inGameView.SetScore;
         inGameModel.OnChangedState += inGameView.Apply;
+
+        inGameModel.Initialize();
+
     }
 }

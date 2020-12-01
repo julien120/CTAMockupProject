@@ -13,18 +13,11 @@ public class InGameView : MonoBehaviour
     [SerializeField] private Cell[] cells;
     [SerializeField] private Text scoreText;
 
-    public event Action<int,int,int,int> OnCheckCell;
-    public event Action OnApplyGameOver;
-
     public event Action OnInputKeyRight;
     public event Action OnInputKeyLeft;
     public event Action OnInputKeyBottom;
     public event Action OnInputKeyFront;
-
-    public int RowStage;
-    public int ColStage;
    
-
     private void Update()
     {
         ObserveInputKey();
@@ -53,7 +46,7 @@ public class InGameView : MonoBehaviour
     /// <summary>
     /// ユーザーのキー入力
     /// </summary>
-    ///
+
     public void ObserveInputKey()
     {
         if (Input.GetKeyDown(KeyCode.RightArrow))

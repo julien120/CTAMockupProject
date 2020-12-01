@@ -11,6 +11,11 @@ using Random = UnityEngine.Random;
 /// </summary>
 public class InGameModel : MonoBehaviour
 {
+    //生成割合のパラメーター&行列
+    public const float GenerationRate = 0.5f;
+    public const int RowStage = 4;
+    public const int ColStage = 4;
+
     /// <summary>
     /// -セルのステート状況を管理&移動できるか判定
     /// </summary>
@@ -23,16 +28,13 @@ public class InGameModel : MonoBehaviour
 
     public event Action<int> OnChangeScore;
 
-
     //viewのSetScoreメソッドを引き渡し
     public event Action<int,int> OnChangedState;
 
-    //生成割合のパラメーター&行列
-    public const float GenerationRate = 0.5f;
-    public const int RowStage = 4;
-    public const int ColStage = 4;
-
-
+    /// <summary>
+    /// 盤面の再描画を行う必要があるかのフラグ
+    /// </summary>
+    private bool isDirty;
 
     ///<summary>
     ///画面に描画する処理：ステージの初期状態を生成
@@ -50,42 +52,124 @@ public class InGameModel : MonoBehaviour
         var posB = new Vector2((posA.x + Random.Range(1, RowStage - 1)) % RowStage, (posA.y + Random.Range(1, ColStage - 1)) % ColStage);
         stageStates[(int)posA.x, (int)posA.y] = 2;
         stageStates[(int)posB.x, (int)posB.y] = Random.Range(0, 1.0f) < GenerationRate ? 2 : 4;
+        //TODO:最初の初期生成
+        //4*4あるうちのひとます
+        //OnChangedState(RowStage * RowStage + ColStage, stageStates[RowStage, ColStage]);
+        for (var i = 0; i < RowStage; i++)
+        {
+            for (var j = 0; j < ColStage; j++)
+            {
+                OnChangedState(i * RowStage + j, stageStates[i, j]);
+            }
+        }
     }
 
     public void KeyRightValue()
     {
-        // TODO: 名前を変える
-        // TODO: 右方向の入力に対して全マスの移動を試みる
-        CheckedCell(1,0);
-    }
-    public void KeyleftValue()
-    {
-        // TODO: 左方向の入力に対して全マスの移動を試みる
-        CheckedCell(-1,0);
-    }
-    public void KeyBottomValue()
-    {
-        // TODO: 下方向の入力に対して全マスの移動を試みる
-        CheckedCell(0,-1);
-    }
-    public void KeyFrontValue()
-    {
-        // TODO: 上方向の入力に対して全マスの移動を試みる
-        CheckedCell(0,1);
-    }
-
-    private void CheckedCell(int value,int values)
-    {
-        // TODO: ステージの状態に変化があれば、OnChangedStateを呼び出してあげる
+        isDirty = false;
+       
         for (var col = ColStage; col >= 0; col--)
         {
             for (var row = 0; row < RowStage; row++)
             {
-              //  OnCheckCell(row, col, value, values);
-              // TODO: 各マスに対してMoveCellしてあげる
+                CheckCell(row, col, 1, 0);
             }
         }
+        if (isDirty)
+        {
+            Debug.Log("trueになってる");
+            CreateNewRandomCell();
+            //indexとstageValueに当たる引数は何か?
+            for (var i = 0; i < RowStage; i++)
+            {
+                for (var j = 0; j < ColStage; j++)
+                {
+                    OnChangedState(i * RowStage + j, stageStates[i, j]);
+                }
+            }
+            ApplyGameOverData();
+        }
     }
+    public void KeyleftValue()
+    {
+        isDirty = false;
+        // TODO: 左方向の入力に対して全マスの移動を試みる
+        for (var row = 0; row < RowStage; row++)
+        {
+            for (var col = 0; col < ColStage; col++)
+            {
+                CheckCell(row, col, -1, 0);
+            }
+        }
+        if (isDirty)
+        {
+            CreateNewRandomCell();
+            //indexとstageValueに当たる引数は何か?
+            for (var i = 0; i < RowStage; i++)
+            {
+                for (var j = 0; j < ColStage; j++)
+                {
+                    OnChangedState(i * RowStage + j, stageStates[i, j]);
+                }
+            }
+            ApplyGameOverData();
+        }
+    }
+    public void KeyBottomValue()
+    {
+        isDirty = false;
+        // TODO: 下方向の入力に対して全マスの移動を試みる
+        for (var row = 0; row < RowStage; row++)
+        {
+            for (var col = 0; col < ColStage; col++)
+            {
+                CheckCell(row, col, 0, -1);
+            }
+        }
+        if (isDirty)
+        {
+            CreateNewRandomCell();
+            //indexとstageValueに当たる引数は何か?
+            for (var i = 0; i < RowStage; i++)
+            {
+                for (var j = 0; j < ColStage; j++)
+                {
+                    OnChangedState(i * RowStage + j, stageStates[i, j]);
+                }
+            }
+            ApplyGameOverData();
+        }
+    }
+    public void KeyFrontValue()
+    {
+        isDirty = false;
+        // TODO: ステージの状態に変化があれば、OnChangedStateを呼び出してあげる
+        // TODO: 上方向の入力に対して全マスの移動を試みる
+        for (var row = RowStage; row >= 0; row--)
+        {
+            for (var col = 0; col < ColStage; col++)
+            {
+                CheckCell(row, col, 0, 1);
+                // TODO: 各マスに対してMoveCellしてあげる
+            }
+        }
+        //もしisDirtyであれば、OnChangedState()する
+        if (isDirty)
+        {
+            CreateNewRandomCell();
+            //indexとstageValueに当たる引数は何か?
+            for (var i = 0; i < RowStage; i++)
+            {
+                for (var j = 0; j < ColStage; j++)
+                {
+                    OnChangedState(i * RowStage + j, stageStates[i, j]);
+                }
+            }
+            ApplyGameOverData();
+        }
+    }
+
+
     /// <summary>
     /// スコアの計算ロジック
     /// </summary>
@@ -119,32 +203,32 @@ public class InGameModel : MonoBehaviour
     ///<summary>
     ///セルを合成する
     ///</summary>
-    private bool IsSynthesizeCell(int[,] stageState)
+    private bool IsSynthesizeCell(int[,] stageStates)
     {
         for (var i = 0; i < RowStage; i++)
         {
             for (var j = 0; j < ColStage; j++)
             {
-                var state = stageState[i, j];
+                var state = stageStates[i, j];
                 var canMerge = false;
                 if (i > 0)
                 {
-                    canMerge |= state == stageState[i - 1, j];
+                    canMerge |= state == stageStates[i - 1, j];
                 }
 
                 if (i < RowStage - 1)
                 {
-                    canMerge |= state == stageState[i + 1, j];
+                    canMerge |= state == stageStates[i + 1, j];
                 }
 
                 if (j > 0)
                 {
-                    canMerge |= state == stageState[i, j - 1];
+                    canMerge |= state == stageStates[i, j - 1];
                 }
 
                 if (j < ColStage - 1)
                 {
-                    canMerge |= state == stageState[i, j + 1];
+                    canMerge |= state == stageStates[i, j + 1];
                 }
 
                 if (canMerge)
@@ -190,8 +274,8 @@ public class InGameModel : MonoBehaviour
             return;
         }
         // 移動可能条件を満たした場合のみ移動処理
-       
-       
+        MoveCell(row, column, horizontal, vertical);
+
     }
 
     public void CreateNewRandomCell()
@@ -261,5 +345,6 @@ public class InGameModel : MonoBehaviour
         {
             return;
         }
+        isDirty = true;
     }
 }
