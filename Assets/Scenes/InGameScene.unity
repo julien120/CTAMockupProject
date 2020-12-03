@@ -410,6 +410,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Image (6)
       objectReference: {fileID: 0}
+    - target: {fileID: 6117664003642667898, guid: d5c5f907068564958a90c83f24933330,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6117664003642667899, guid: d5c5f907068564958a90c83f24933330,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -3894,6 +3899,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93ce44114574244e78880564fb918b54, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1449061364
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1449061361}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35ffcbc5ddd6042f192e2155522e54fe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   cells:
   - {fileID: 686132434}
   - {fileID: 707411126}
@@ -3911,18 +3928,6 @@ MonoBehaviour:
   - {fileID: 498976516}
   - {fileID: 1937739127}
   - {fileID: 263379756}
---- !u!114 &1449061364
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1449061361}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 35ffcbc5ddd6042f192e2155522e54fe, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
   scoreText: {fileID: 1226145406}
 --- !u!114 &1449061365
 MonoBehaviour:
@@ -5426,4 +5431,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4452e568f262d4a2eb9f1849aecd9d0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CloseButton: {fileID: 0}
+  closeButton: {fileID: 0}
