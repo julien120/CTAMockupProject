@@ -79,7 +79,7 @@ public class InGameModel : MonoBehaviour
         if (isDirty)
         {
             CreateNewRandomCell();
-            drawChangedStates();
+            DrawChangedStates();
             ApplyGameOverData();
         }
 
@@ -98,7 +98,7 @@ public class InGameModel : MonoBehaviour
         if (isDirty)
         {
             CreateNewRandomCell();
-            drawChangedStates();
+            DrawChangedStates();
             ApplyGameOverData();
         }
     }
@@ -116,7 +116,7 @@ public class InGameModel : MonoBehaviour
         if (isDirty)
         {
             CreateNewRandomCell();
-            drawChangedStates();
+            DrawChangedStates();
             ApplyGameOverData();
         }
     }
@@ -135,14 +135,14 @@ public class InGameModel : MonoBehaviour
         if (isDirty)
         {
             CreateNewRandomCell();
-            drawChangedStates();
+            DrawChangedStates();
             ApplyGameOverData();
         }
     }
 
     ///<summary>
     ///</summary>
-    private void drawChangedStates()
+    private void DrawChangedStates()
     {
         for (var i = 0; i < rowStage; i++)
         {
@@ -224,7 +224,7 @@ public class InGameModel : MonoBehaviour
         return true;
     }
 
-    public bool CheckBorder(int row, int column, int horizontal, int vertical)
+    private bool CheckBorder(int row, int column, int horizontal, int vertical)
     {
 
         // チェックマスが4x4外ならそれ以上処理を行わない
@@ -244,7 +244,7 @@ public class InGameModel : MonoBehaviour
         return true;
     }
 
-    public void CheckCell(int row, int column, int horizontal, int vertical)
+    private void CheckCell(int row, int column, int horizontal, int vertical)
     {
         // 4x4の境界線チェック
         if (CheckBorder(row, column, horizontal, vertical) == false)
@@ -261,7 +261,7 @@ public class InGameModel : MonoBehaviour
 
     }
 
-    public void CreateNewRandomCell()
+    private void CreateNewRandomCell()
     {
         // ゲーム終了時はスポーンしない
         if (IsGameOver())
@@ -278,7 +278,7 @@ public class InGameModel : MonoBehaviour
         stageStates[row, col] = Random.Range(0, 1f) < InGameModel.generationRate ? 2 : 4;
     }
 
-    public void ApplyGameOverData()
+    private void ApplyGameOverData()
     {
         if (IsGameOver())
         {
