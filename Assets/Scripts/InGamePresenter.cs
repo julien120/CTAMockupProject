@@ -10,11 +10,13 @@ public class  InGamePresenter : MonoBehaviour
 {
     private InGameModel inGameModel;
     private InGameView inGameView;
+    private MenuWindowView menuWindowView;
 
     private void Start()
     {
         inGameModel = GetComponent<InGameModel>();
         inGameView = GetComponent<InGameView>();
+        menuWindowView = GetComponent<MenuWindowView>();
 
         // Modelの値の変更を監視する
 
@@ -28,7 +30,15 @@ public class  InGamePresenter : MonoBehaviour
         inGameModel.OnChangeScore += inGameView.SetScore;
         inGameModel.OnChangedState += inGameView.Apply;
 
+        
+
         inGameModel.Initialize();
+
+        //menu.csとmodel.csとのアクション変数
+        //スコアのリセットと行列の再描画を行う&menu開いているちゅうのキー入力禁止
+
+        
+//        menuWindow.OnRestart += inGameModel.RestartScene;
 
     }
 }

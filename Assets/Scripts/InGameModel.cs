@@ -34,7 +34,9 @@ public class InGameModel : MonoBehaviour
     /// <summary>
     /// 盤面の再描画を行う必要があるかのフラグ
     /// </summary>
-    private bool isDirty;
+    public bool isDirty;
+
+    public bool KeyOn = false;
 
     ///<summary>
     ///画面に描画する処理：ステージの初期状態を生成
@@ -67,6 +69,7 @@ public class InGameModel : MonoBehaviour
 
     public void KeyRightValue()
     {
+      if (!KeyOn) { 
         isDirty = false;
 
         for (var col = colStage; col >= 0; col--)
@@ -82,6 +85,7 @@ public class InGameModel : MonoBehaviour
             DrawChangedStates();
             ApplyGameOverData();
         }
+      }
 
     }
     public void KeyleftValue()
@@ -282,8 +286,7 @@ public class InGameModel : MonoBehaviour
     {
         if (IsGameOver())
         {
-            PlayerPrefs.SetInt(PlayerPrefsKeys.ScoreData, score);
-            SceneController.Instance.LoadResultScene();
+            RestartScene();
         }
     }
 
@@ -329,5 +332,16 @@ public class InGameModel : MonoBehaviour
             return;
         }
         isDirty = true;
+    }
+
+    public void CannotInputKey()
+    {
+        KeyOn = true;
+    }
+
+    public void RestartScene()
+    {
+        PlayerPrefs.SetInt(PlayerPrefsKeys.ScoreData, score);
+        SceneController.Instance.LoadResultScene();
     }
 }

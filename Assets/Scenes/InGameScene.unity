@@ -621,7 +621,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 156375517}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2059380210}
+        m_MethodName: RestartButton
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &156375517
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3941,6 +3952,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad715d539402441d0b5bffbccc4b77cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isDirty: 0
+  KeyOn: 0
 --- !u!1 &1489348941
 GameObject:
   m_ObjectHideFlags: 0
@@ -5354,6 +5367,8 @@ GameObject:
   - component: {fileID: 2059380209}
   - component: {fileID: 2059380208}
   - component: {fileID: 2059380210}
+  - component: {fileID: 2059380212}
+  - component: {fileID: 2059380211}
   m_Layer: 5
   m_Name: MenuWindow
   m_TagString: Untagged
@@ -5428,7 +5443,31 @@ MonoBehaviour:
   m_GameObject: {fileID: 2059380206}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4452e568f262d4a2eb9f1849aecd9d0e, type: 3}
+  m_Script: {fileID: 11500000, guid: d6333a745ca884295afb71a2a82819c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  closeButton: {fileID: 0}
+  closeButton: {fileID: 985248758}
+--- !u!114 &2059380211
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2059380206}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e39c02dba1a4f4ad5b5bb1445a994c3b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2059380212
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2059380206}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb294a415c46a40fda57364176f3fd53, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
