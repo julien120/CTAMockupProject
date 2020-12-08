@@ -36,8 +36,11 @@ public class  InGamePresenter : MonoBehaviour
         menuWindowPresenter.OnKeyOff += inGameModel.CannotInputKey;
         menuWindowPresenter.OnKeyOn += inGameModel.CanInputKey;
 
-        //スコアのリセットと行列の再描画を行う&
-        //menuWindow.OnRestart += inGameModel.RestartScene;
+        //スコアのリセットと行列の再描画を行う
+        //楽なやり方
+        //menuWindowPresenter.OnRestart += inGameModel.RestartScene;
 
+        //挑戦的なやり方
+        menuWindowPresenter.OnRestart += inGameModel.Restart;
     }
 }

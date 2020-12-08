@@ -40,7 +40,7 @@ public class MenuWindowView : MonoBehaviour
     {
         //リスタート処理{再描画とスコア０が含まれているか？分割するか}
         Debug.Log("リスタートボタン押した");
-       // OnRestart();
+        OnRestart();
 
 
     }

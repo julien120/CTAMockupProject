@@ -358,4 +358,11 @@ public class InGameModel : MonoBehaviour
         PlayerPrefs.SetInt(PlayerPrefsKeys.ScoreData, score);
         SceneController.Instance.LoadResultScene();
     }
+
+    public void Restart()
+    {
+        Initialize();
+        OnChangeScore(0);
+
+    }
 }

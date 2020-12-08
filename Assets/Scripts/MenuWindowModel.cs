@@ -6,7 +6,9 @@ using System;
 public class MenuWindowModel : MonoBehaviour
 {
    public event Action OnKeyOff;
-    public event Action OnKeyOn;
+   public event Action OnKeyOn;
+    public event Action OnRestart;
+
 
     /// <summary>
     /// メニューを開いているときはユーザー入力があってもキー入力できないようにする
@@ -19,5 +21,10 @@ public class MenuWindowModel : MonoBehaviour
     public void CanInputKey()
     {
         OnKeyOn();
+    }
+
+    public void Restart()
+    {
+        OnRestart();
     }
 }
