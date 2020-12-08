@@ -90,7 +90,9 @@ public class InGameModel : MonoBehaviour
     }
     public void KeyleftValue()
     {
-        isDirty = false;
+        if (!KeyOn) { 
+        
+            isDirty = false;
 
         for (var row = 0; row < rowStage; row++)
         {
@@ -105,42 +107,49 @@ public class InGameModel : MonoBehaviour
             DrawChangedStates();
             ApplyGameOverData();
         }
+        }
     }
     public void KeyBottomValue()
     {
-        isDirty = false;
+        if (!KeyOn)
+        {
+            isDirty = false;
 
-        for (var row = rowStage; row >= 0; row--)
-        {
-            for (var col = 0; col < colStage; col++)
+            for (var row = rowStage; row >= 0; row--)
             {
-                CheckCell(row, col, 0, 1);
+                for (var col = 0; col < colStage; col++)
+                {
+                    CheckCell(row, col, 0, 1);
+                }
             }
-        }
-        if (isDirty)
-        {
-            CreateNewRandomCell();
-            DrawChangedStates();
-            ApplyGameOverData();
+            if (isDirty)
+            {
+                CreateNewRandomCell();
+                DrawChangedStates();
+                ApplyGameOverData();
+            }
         }
     }
     public void KeyFrontValue()
     {
-        isDirty = false;
+        if (!KeyOn)
+        {
+            isDirty = false;
 
-        for (var row = 0; row < rowStage; row++)
-        {
-            for (var col = 0; col < colStage; col++)
+            for (var row = 0; row < rowStage; row++)
             {
-                CheckCell(row, col, 0, -1);
+                for (var col = 0; col < colStage; col++)
+                {
+                    CheckCell(row, col, 0, -1);
+                }
             }
-        }
-        //もしisDirtyであれば、OnChangedState()する
-        if (isDirty)
-        {
-            CreateNewRandomCell();
-            DrawChangedStates();
-            ApplyGameOverData();
+            //もしisDirtyであれば、OnChangedState()する
+            if (isDirty)
+            {
+                CreateNewRandomCell();
+                DrawChangedStates();
+                ApplyGameOverData();
+            }
         }
     }
 
@@ -337,6 +346,11 @@ public class InGameModel : MonoBehaviour
     public void CannotInputKey()
     {
         KeyOn = true;
+    }
+
+    public void CanInputKey()
+    {
+        KeyOn = false;
     }
 
     public void RestartScene()

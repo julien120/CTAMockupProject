@@ -9,6 +9,7 @@ public class MenuWindowView : MonoBehaviour
     [SerializeField] Button closeButton;
     public event Action OnRestart;
     public event Action OnKeyOff;
+    public event Action OnKeyOn;
 
     /// <summary>
     /// Windowを表示する
@@ -18,7 +19,7 @@ public class MenuWindowView : MonoBehaviour
     {
         gameObject.SetActive(true);
         //TODO:InGameModelで(!変数){入力}にリンケージするアクション
-        OnKeyOff();
+       OnKeyOff();
     }
 
     /// <summary>
@@ -27,6 +28,7 @@ public class MenuWindowView : MonoBehaviour
     public void CloseWindow()
     {
         gameObject.SetActive(false);
+        OnKeyOn();
     }
 
     ///<summary>
@@ -38,7 +40,7 @@ public class MenuWindowView : MonoBehaviour
     {
         //リスタート処理{再描画とスコア０が含まれているか？分割するか}
         Debug.Log("リスタートボタン押した");
-        //OnRestart();
+       // OnRestart();
 
 
     }
