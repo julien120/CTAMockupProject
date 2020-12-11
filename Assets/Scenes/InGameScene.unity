@@ -889,7 +889,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2059380210}
+      - m_Target: {fileID: 1449061364}
         m_MethodName: OpenWindow
         m_Mode: 1
         m_Arguments:
@@ -3911,8 +3911,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   menuWindowPresenter: {fileID: 2059380211}
-  menuWindowModel: {fileID: 2059380212}
-  menuWindowView: {fileID: 2059380210}
+  menuWindowView: {fileID: 0}
+  menuWindowModel: {fileID: 0}
 --- !u!114 &1449061364
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3943,6 +3943,7 @@ MonoBehaviour:
   - {fileID: 1937739127}
   - {fileID: 263379756}
   scoreText: {fileID: 1226145406}
+  menu: {fileID: 2059380206}
 --- !u!114 &1449061365
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3955,8 +3956,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad715d539402441d0b5bffbccc4b77cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isDirty: 0
-  KeyOn: 0
 --- !u!1 &1489348941
 GameObject:
   m_ObjectHideFlags: 0

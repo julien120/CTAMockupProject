@@ -31,16 +31,12 @@ public class  InGamePresenter : MonoBehaviour
 
         inGameModel.Initialize();
 
-        //menu開いているちゅうのキー入力禁止
+        ///<summary>
+        ///menuを開いたときの処理：キー入力禁止、リスタートボタンの実装
+        ///</summary>
         menuWindowPresenter.Initialize();
-        menuWindowPresenter.OnKeyOff += inGameModel.CannotInputKey;
         menuWindowPresenter.OnKeyOn += inGameModel.CanInputKey;
-
-        //スコアのリセットと行列の再描画を行う
-        //楽なやり方
-        //menuWindowPresenter.OnRestart += inGameModel.RestartScene;
-
-        //挑戦的なやり方
-        menuWindowPresenter.OnRestart += inGameModel.Restart;
+        inGameView.OnKeyOff += inGameModel.CannotInputKey;
+        menuWindowPresenter.OnRestart += inGameModel.RestartGame;
     }
 }

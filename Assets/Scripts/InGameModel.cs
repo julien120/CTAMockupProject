@@ -34,9 +34,9 @@ public class InGameModel : MonoBehaviour
     /// <summary>
     /// 盤面の再描画を行う必要があるかのフラグ
     /// </summary>
-    public bool isDirty;
+    private bool isDirty;
 
-    public bool KeyOn = false;
+    private bool isKeyOn = false;
 
     ///<summary>
     ///画面に描画する処理：ステージの初期状態を生成
@@ -69,7 +69,7 @@ public class InGameModel : MonoBehaviour
 
     public void KeyRightValue()
     {
-      if (!KeyOn) { 
+      if (!isKeyOn) { 
         isDirty = false;
 
         for (var col = colStage; col >= 0; col--)
@@ -90,7 +90,7 @@ public class InGameModel : MonoBehaviour
     }
     public void KeyleftValue()
     {
-        if (!KeyOn) { 
+        if (!isKeyOn) { 
         
             isDirty = false;
 
@@ -111,7 +111,7 @@ public class InGameModel : MonoBehaviour
     }
     public void KeyBottomValue()
     {
-        if (!KeyOn)
+        if (!isKeyOn)
         {
             isDirty = false;
 
@@ -132,7 +132,7 @@ public class InGameModel : MonoBehaviour
     }
     public void KeyFrontValue()
     {
-        if (!KeyOn)
+        if (!isKeyOn)
         {
             isDirty = false;
 
@@ -295,7 +295,7 @@ public class InGameModel : MonoBehaviour
     {
         if (IsGameOver())
         {
-            RestartScene();
+            LoadRestartScene();
         }
     }
 
@@ -345,21 +345,21 @@ public class InGameModel : MonoBehaviour
 
     public void CannotInputKey()
     {
-        KeyOn = true;
+        isKeyOn = true;
     }
 
     public void CanInputKey()
     {
-        KeyOn = false;
+        isKeyOn = false;
     }
 
-    public void RestartScene()
+    public void LoadRestartScene()
     {
         PlayerPrefs.SetInt(PlayerPrefsKeys.ScoreData, score);
         SceneController.Instance.LoadResultScene();
     }
 
-    public void Restart()
+    public void RestartGame()
     {
         Initialize();
         OnChangeScore(0);

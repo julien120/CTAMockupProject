@@ -12,17 +12,6 @@ public class MenuWindowView : MonoBehaviour
     public event Action OnKeyOn;
 
     /// <summary>
-    /// Windowを表示する
-    /// TODO:OpenWindow中はセルの移動入力は受け付けない。絶対false。
-    /// </summary>
-    public void OpenWindow()
-    {
-        gameObject.SetActive(true);
-        //TODO:InGameModelで(!変数){入力}にリンケージするアクション
-       OnKeyOff();
-    }
-
-    /// <summary>
     /// Windowを非表示にする
     /// </summary>
     public void CloseWindow()
@@ -36,7 +25,7 @@ public class MenuWindowView : MonoBehaviour
     ///modelにはスタート時の描画とスコアを0にする処理を書く
     ///</summary>
 
-    public void RestartButton()
+    public void RestartGame()
     {
         //リスタート処理{再描画とスコア０が含まれているか？分割するか}
         Debug.Log("リスタートボタン押した");
