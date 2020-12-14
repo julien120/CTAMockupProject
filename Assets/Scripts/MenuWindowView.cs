@@ -6,10 +6,10 @@ using System;
 
 public class MenuWindowView : MonoBehaviour
 {
-    [SerializeField] Button closeButton;
     public event Action OnRestart;
-    public event Action OnKeyOff;
     public event Action OnKeyOn;
+
+    [SerializeField] GameObject menu;
 
     /// <summary>
     /// Windowを非表示にする
@@ -18,6 +18,14 @@ public class MenuWindowView : MonoBehaviour
     {
         gameObject.SetActive(false);
         OnKeyOn();
+    }
+
+    /// <summary>
+    /// メニューを開く
+    /// </summary>
+    public void OpenWindow()
+    {
+        menu.SetActive(true);
     }
 
     ///<summary>

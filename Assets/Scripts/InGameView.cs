@@ -12,14 +12,16 @@ public class InGameView : MonoBehaviour
 {
     [SerializeField] private Cell[] cells;
     [SerializeField] private Text scoreText;
-    [SerializeField] GameObject menu;
+    
 
     public event Action OnInputKeyRight;
     public event Action OnInputKeyLeft;
     public event Action OnInputKeyBottom;
     public event Action OnInputKeyFront;
 
-    public event Action OnKeyOff;
+    public event Action OnOpenMenu;
+
+   
 
     private void Update()
     {
@@ -77,9 +79,8 @@ public class InGameView : MonoBehaviour
     /// </summary>
     public void OpenWindow()
     {
-        menu.SetActive(true);
-        //TODO:InGameModelで(!変数){入力}にリンケージするアクション
-        OnKeyOff();
+        //メニューを開く:MenuWindow.Viewに繋がっている
+        OnOpenMenu();
     }
 
 }
