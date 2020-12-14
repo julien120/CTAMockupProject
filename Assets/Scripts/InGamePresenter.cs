@@ -1,4 +1,5 @@
 using UnityEngine;
+using System;
 
 /// <summary>
 /// 「Presenterはmodel-Viewクラス間の橋渡し、挙動の監視を行うクラス」
@@ -10,6 +11,9 @@ public class  InGamePresenter : MonoBehaviour
 {
     private InGameModel inGameModel;
     private InGameView inGameView;
+    [SerializeField] MenuWindowPresenter menuWindowPresenter;
+
+    public event Action OnOpenMenu;
 
     private void Start()
     {
@@ -24,11 +28,27 @@ public class  InGamePresenter : MonoBehaviour
         inGameView.OnInputKeyBottom += inGameModel.KeyBottomValue;
         inGameView.OnInputKeyFront += inGameModel.KeyFrontValue;
 
+     
+
         //modelのスコア判定をviewに伝え、描画する
         inGameModel.OnChangeScore += inGameView.SetScore;
         inGameModel.OnChangedState += inGameView.Apply;
 
         inGameModel.Initialize();
 
+
+        //menuを開いたときの処理：キー入力禁止、リスタートボタンの実装        
+        menuWindowPresenter.Initialize();
+        menuWindowPresenter.OnKeyOn += inGameModel.CanInputKey;
+        menuWindowPresenter.OnRestart += inGameModel.RestartGame;
+        inGameView.OnOpenMenu += OpenMenu;
+
+    }
+
+
+    private void OpenMenu()
+    {
+        menuWindowPresenter.OpenMenu();
+        inGameModel.CannotInputKey();
     }
 }

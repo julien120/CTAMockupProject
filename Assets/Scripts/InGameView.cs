@@ -12,12 +12,17 @@ public class InGameView : MonoBehaviour
 {
     [SerializeField] private Cell[] cells;
     [SerializeField] private Text scoreText;
+    
 
     public event Action OnInputKeyRight;
     public event Action OnInputKeyLeft;
     public event Action OnInputKeyBottom;
     public event Action OnInputKeyFront;
+
+    public event Action OnOpenMenu;
+
    
+
     private void Update()
     {
         ObserveInputKey();
@@ -66,6 +71,16 @@ public class InGameView : MonoBehaviour
         {
             OnInputKeyBottom();
         }
+    }
+
+    /// <summary>
+    /// Windowを表示する
+    /// TODO:OpenWindow中はセルの移動入力は受け付けない。絶対false。
+    /// </summary>
+    public void OpenWindow()
+    {
+        //メニューを開く:MenuWindow.Viewに繋がっている
+        OnOpenMenu();
     }
 
 }

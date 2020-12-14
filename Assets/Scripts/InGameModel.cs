@@ -36,6 +36,8 @@ public class InGameModel : MonoBehaviour
     /// </summary>
     private bool isDirty;
 
+    private bool isKeyOn = false;
+
     ///<summary>
     ///画面に描画する処理：ステージの初期状態を生成
     ///</summary>
@@ -67,6 +69,7 @@ public class InGameModel : MonoBehaviour
 
     public void KeyRightValue()
     {
+      if (!isKeyOn) { 
         isDirty = false;
 
         for (var col = colStage; col >= 0; col--)
@@ -82,11 +85,14 @@ public class InGameModel : MonoBehaviour
             DrawChangedStates();
             ApplyGameOverData();
         }
+      }
 
     }
     public void KeyleftValue()
     {
-        isDirty = false;
+        if (!isKeyOn) { 
+        
+            isDirty = false;
 
         for (var row = 0; row < rowStage; row++)
         {
@@ -101,42 +107,49 @@ public class InGameModel : MonoBehaviour
             DrawChangedStates();
             ApplyGameOverData();
         }
+        }
     }
     public void KeyBottomValue()
     {
-        isDirty = false;
+        if (!isKeyOn)
+        {
+            isDirty = false;
 
-        for (var row = rowStage; row >= 0; row--)
-        {
-            for (var col = 0; col < colStage; col++)
+            for (var row = rowStage; row >= 0; row--)
             {
-                CheckCell(row, col, 0, 1);
+                for (var col = 0; col < colStage; col++)
+                {
+                    CheckCell(row, col, 0, 1);
+                }
             }
-        }
-        if (isDirty)
-        {
-            CreateNewRandomCell();
-            DrawChangedStates();
-            ApplyGameOverData();
+            if (isDirty)
+            {
+                CreateNewRandomCell();
+                DrawChangedStates();
+                ApplyGameOverData();
+            }
         }
     }
     public void KeyFrontValue()
     {
-        isDirty = false;
+        if (!isKeyOn)
+        {
+            isDirty = false;
 
-        for (var row = 0; row < rowStage; row++)
-        {
-            for (var col = 0; col < colStage; col++)
+            for (var row = 0; row < rowStage; row++)
             {
-                CheckCell(row, col, 0, -1);
+                for (var col = 0; col < colStage; col++)
+                {
+                    CheckCell(row, col, 0, -1);
+                }
             }
-        }
-        //もしisDirtyであれば、OnChangedState()する
-        if (isDirty)
-        {
-            CreateNewRandomCell();
-            DrawChangedStates();
-            ApplyGameOverData();
+            //もしisDirtyであれば、OnChangedState()する
+            if (isDirty)
+            {
+                CreateNewRandomCell();
+                DrawChangedStates();
+                ApplyGameOverData();
+            }
         }
     }
 
@@ -282,8 +295,7 @@ public class InGameModel : MonoBehaviour
     {
         if (IsGameOver())
         {
-            PlayerPrefs.SetInt(PlayerPrefsKeys.ScoreData, score);
-            SceneController.Instance.LoadResultScene();
+            LoadRestartScene();
         }
     }
 
@@ -329,5 +341,28 @@ public class InGameModel : MonoBehaviour
             return;
         }
         isDirty = true;
+    }
+
+    public void CannotInputKey()
+    {
+        isKeyOn = true;
+    }
+
+    public void CanInputKey()
+    {
+        isKeyOn = false;
+    }
+
+    public void LoadRestartScene()
+    {
+        PlayerPrefs.SetInt(PlayerPrefsKeys.ScoreData, score);
+        SceneController.Instance.LoadResultScene();
+    }
+
+    public void RestartGame()
+    {
+        Initialize();
+        OnChangeScore(0);
+
     }
 }
