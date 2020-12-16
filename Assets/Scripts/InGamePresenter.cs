@@ -32,6 +32,8 @@ public class  InGamePresenter : MonoBehaviour
 
         //modelのスコア判定をviewに伝え、描画する
         inGameModel.OnChangeScore += inGameView.SetScore;
+        inGameModel.OnChangeHighScore += inGameView.SetHighScore;
+
         inGameModel.OnChangedState += inGameView.Apply;
 
         inGameModel.Initialize();

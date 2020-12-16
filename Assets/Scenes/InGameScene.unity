@@ -3941,6 +3941,7 @@ MonoBehaviour:
   - {fileID: 1937739127}
   - {fileID: 263379756}
   scoreText: {fileID: 1226145406}
+  highScoreText: {fileID: 367621331}
 --- !u!114 &1449061365
 MonoBehaviour:
   m_ObjectHideFlags: 0

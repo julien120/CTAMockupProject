@@ -12,7 +12,8 @@ public class InGameView : MonoBehaviour
 {
     [SerializeField] private Cell[] cells;
     [SerializeField] private Text scoreText;
-    
+    [SerializeField] private Text highScoreText;
+
 
     public event Action OnInputKeyRight;
     public event Action OnInputKeyLeft;
@@ -35,6 +36,16 @@ public class InGameView : MonoBehaviour
     public void SetScore(int score)
     {
         scoreText.text = $"Score: {score}";
+    }
+
+    /// <summary>
+    /// ハイスコア
+    /// </summary>
+    /// <param name="score"></param>
+    public void SetHighScore()
+    {
+        highScoreText.text = $"HiScore: {PlayerPrefs.GetInt(PlayerPrefsKeys.ScoreData, 0).ToString()}";
+        
     }
 
 

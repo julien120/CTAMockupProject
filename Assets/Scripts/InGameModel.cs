@@ -25,8 +25,13 @@ public class InGameModel : MonoBehaviour
     /// -スコアを管理
     /// </summary>
     private int score { get; set; }
+    private int highScore = 1;
 
+    /// <summary>
+    /// スコア管理
+    /// </summary>
     public event Action<int> OnChangeScore;
+    public event Action OnChangeHighScore;
 
     //viewのSetScoreメソッドを引き渡し
     public event Action<int,int> OnChangedState;
@@ -176,8 +181,17 @@ public class InGameModel : MonoBehaviour
         score += cellValue * 2;
         OnChangeScore(score);
     }
-    
- 
+
+    public void SetHighScore(int score)
+    {
+        if (score > highScore) { 
+        highScore = score;
+        PlayerPrefs.SetInt(PlayerPrefsKeys.ScoreHighData, highScore);
+        OnChangeHighScore();
+        }
+    }
+
+
 
     private bool IsGameOver()
     {
@@ -295,6 +309,8 @@ public class InGameModel : MonoBehaviour
     {
         if (IsGameOver())
         {
+
+            SetHighScore(score);
             LoadRestartScene();
         }
     }
@@ -333,6 +349,7 @@ public class InGameModel : MonoBehaviour
             stageStates[row, column] = 0;
             stageStates[nextRow, nextCol] = value * 2;
             SetScore(value);
+            SetHighScore(score);
 
         }
         // 異なる値のときは移動処理を終了
