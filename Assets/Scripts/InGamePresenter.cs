@@ -37,7 +37,7 @@ public class  InGamePresenter : MonoBehaviour
         inGameModel.OnChangedState += inGameView.Apply;
 
         inGameModel.Initialize();
-
+        inGameView.SetHighScore();
 
         //menuを開いたときの処理：キー入力禁止、リスタートボタンの実装        
         menuWindowPresenter.Initialize();
