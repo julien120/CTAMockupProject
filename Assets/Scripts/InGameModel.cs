@@ -25,13 +25,13 @@ public class InGameModel : MonoBehaviour
     /// -スコアを管理
     /// </summary>
     private int score { get; set; }
-    private int highScore = 0;
+    public int HighScore = 0;
 
     /// <summary>
     /// スコア管理
     /// </summary>
     public event Action<int> OnChangeScore;
-    public event Action OnChangeHighScore;
+    public event Action<int> OnChangeHighScore;
 
     //viewのSetScoreメソッドを引き渡し
     public event Action<int,int> OnChangedState;
@@ -69,7 +69,7 @@ public class InGameModel : MonoBehaviour
                 OnChangedState(i * rowStage + j, stageStates[i, j]);
             }
         }
-        highScore = PlayerPrefs.GetInt(PlayerPrefsKeys.ScoreHighData);
+        HighScore = PlayerPrefs.GetInt(PlayerPrefsKeys.ScoreHighData);
         ApplyGameOverData();
     }
 
@@ -185,10 +185,10 @@ public class InGameModel : MonoBehaviour
 
     public void CheckHighScore(int score)
     {
-        if (score > highScore) { 
-            highScore = score;
-            PlayerPrefs.SetInt(PlayerPrefsKeys.ScoreHighData, highScore);
-            OnChangeHighScore();
+        if (score > HighScore) { 
+            HighScore = score;
+            PlayerPrefs.SetInt(PlayerPrefsKeys.ScoreHighData, HighScore);
+            OnChangeHighScore(HighScore);
         }
     }
 
@@ -383,6 +383,7 @@ public class InGameModel : MonoBehaviour
         PlayerPrefs.SetInt(PlayerPrefsKeys.ScoreData, score);
         OnChangeScore(0);
         Initialize();
-
     }
+
+   
 }

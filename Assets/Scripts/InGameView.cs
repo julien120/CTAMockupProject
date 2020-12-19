@@ -22,6 +22,8 @@ public class InGameView : MonoBehaviour
 
     public event Action OnOpenMenu;
 
+    public event Action OnHighScoreData;
+
 
     private void Update()
     {
@@ -40,9 +42,10 @@ public class InGameView : MonoBehaviour
    /// <summary>
    /// ハイスコアの描画
    /// </summary>
-    public void SetHighScore()
+    public void SetHighScore(int highScore)
     {
-        highScoreText.text = $"HiScore: {PlayerPrefs.GetInt(PlayerPrefsKeys.ScoreHighData, 0).ToString()}";
+        
+        highScoreText.text = $"HiScore: {highScore}";
         
     }
 
