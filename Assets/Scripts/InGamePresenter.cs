@@ -32,10 +32,12 @@ public class  InGamePresenter : MonoBehaviour
 
         //modelのスコア判定をviewに伝え、描画する
         inGameModel.OnChangeScore += inGameView.SetScore;
+        inGameModel.OnChangeHighScore += inGameView.SetHighScore;
+
         inGameModel.OnChangedState += inGameView.Apply;
 
         inGameModel.Initialize();
-
+        inGameView.SetHighScore(inGameModel.HighScore);
 
         //menuを開いたときの処理：キー入力禁止、リスタートボタンの実装        
         menuWindowPresenter.Initialize();

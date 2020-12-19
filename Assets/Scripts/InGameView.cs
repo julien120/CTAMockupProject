@@ -12,7 +12,8 @@ public class InGameView : MonoBehaviour
 {
     [SerializeField] private Cell[] cells;
     [SerializeField] private Text scoreText;
-    
+    [SerializeField] private Text highScoreText;
+
 
     public event Action OnInputKeyRight;
     public event Action OnInputKeyLeft;
@@ -21,7 +22,8 @@ public class InGameView : MonoBehaviour
 
     public event Action OnOpenMenu;
 
-   
+    public event Action OnHighScoreData;
+
 
     private void Update()
     {
@@ -35,6 +37,16 @@ public class InGameView : MonoBehaviour
     public void SetScore(int score)
     {
         scoreText.text = $"Score: {score}";
+    }
+
+   /// <summary>
+   /// ハイスコアの描画
+   /// </summary>
+    public void SetHighScore(int highScore)
+    {
+        
+        highScoreText.text = $"HiScore: {highScore}";
+        
     }
 
 
