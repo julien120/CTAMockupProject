@@ -13,7 +13,7 @@ public class InGameView : MonoBehaviour
     [SerializeField] private Cell[] cells;
     [SerializeField] private Text scoreText;
     [SerializeField] private Text highScoreText;
-
+    private IInputInterface iInputInterface; //アタッチできない？
 
     public event Action OnInputKeyRight;
     public event Action OnInputKeyLeft;
@@ -24,10 +24,38 @@ public class InGameView : MonoBehaviour
 
     public event Action OnHighScoreData;
 
+    
+    
 
+    /// <summary>
+    /// プラットフォーム判断し、インターフェースの実装しているスクリプトでそれぞれの挙動を記述する
+    /// </summary>
+    private void Start()
+    {
+        if (Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.IPhonePlayer)
+        {
+            iInputInterface = new InputOnMobile();
+        }
+        else if (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor)
+        {
+            iInputInterface = new InputOnPC();
+        }
+        else
+        {
+            iInputInterface = new InputOnPC();
+        }
+    }
+
+    /// <summary>
+    /// PCでもmobileでもOnInputKeyRight();
+    /// </summary>
     private void Update()
     {
-        ObserveInputKey();
+        //pcでもmobileでもInputKey()内の上下左右によって変わる出力をInGameViewに伝え、
+        //それぞれに対応するアクション型を出力する
+        iInputInterface.InputKey();
+
+
     }
 
     /// <summary>
@@ -66,22 +94,29 @@ public class InGameView : MonoBehaviour
 
     public void ObserveInputKey()
     {
-        if (Input.GetKeyDown(KeyCode.RightArrow))
+        int direction = iInputInterface.InputKey();
+        switch (direction)
         {
-            OnInputKeyRight();
-        }
-        else if (Input.GetKeyDown(KeyCode.LeftArrow))
-        {
+            case 1:
+                OnInputKeyRight();
+                break;
 
-            OnInputKeyLeft();
-        }
-        else if (Input.GetKeyDown(KeyCode.UpArrow))
-        {
-            OnInputKeyFront();
-        }
-        else if (Input.GetKeyDown(KeyCode.DownArrow))
-        {
-            OnInputKeyBottom();
+            case 2:
+                OnInputKeyLeft();
+                break;
+
+            case 3:
+                OnInputKeyFront();
+                break;
+
+            case 4:
+                OnInputKeyBottom();
+                break;
+
+            case 0:
+                //int型関数の処理の都合で0を書いちゃったけどどうしようか
+                Debug.Log("どれにも当てはまらない");
+                break;
         }
     }
 
