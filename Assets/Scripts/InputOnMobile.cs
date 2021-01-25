@@ -15,6 +15,7 @@ class InputOnMobile : IInputInterface
             // タッチ情報の取得
             Touch touch = Input.GetTouch(0);
             Vector2 startPos = Input.GetTouch(0).position;
+            Vector3 endPos = Input.GetTouch(0).position;
 
             if (touch.phase == TouchPhase.Began)
             {
@@ -23,9 +24,9 @@ class InputOnMobile : IInputInterface
             
             if (touch.phase == TouchPhase.Ended)
             {
+                endPos = Input.mousePosition;
 
-             Vector3 endPos = Input.GetTouch(0).position;
-
+                //startPos.x - endPos.xがマイナス且つ、startPos.y - endPos.y > startPos.x - endPos.x
                 //右
                 if (endPos.x > startPos.x && endPos.x - startPos.x > endPos.y - startPos.y)
                 {
