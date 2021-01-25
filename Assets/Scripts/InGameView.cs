@@ -13,7 +13,7 @@ public class InGameView : MonoBehaviour
     [SerializeField] private Cell[] cells;
     [SerializeField] private Text scoreText;
     [SerializeField] private Text highScoreText;
-    private IInputInterface iInputInterface; //アタッチできない？
+    private IInputInterface iInputInterface; 
 
     public event Action OnInputKeyRight;
     public event Action OnInputKeyLeft;
@@ -53,9 +53,7 @@ public class InGameView : MonoBehaviour
     {
         //pcでもmobileでもInputKey()内の上下左右によって変わる出力をInGameViewに伝え、
         //それぞれに対応するアクション型を出力する
-        iInputInterface.InputKey();
-
-
+        ObserveInputKey();
     }
 
     /// <summary>
@@ -94,28 +92,27 @@ public class InGameView : MonoBehaviour
 
     public void ObserveInputKey()
     {
-        int direction = iInputInterface.InputKey();
+        InputDirection direction = iInputInterface.InputKey();
         switch (direction)
         {
-            case 1:
+            case InputDirection.Right:
                 OnInputKeyRight();
+                Debug.Log("どれにも当てはまらない");
                 break;
 
-            case 2:
+            case InputDirection.Left:
                 OnInputKeyLeft();
                 break;
 
-            case 3:
+            case InputDirection.Up:
                 OnInputKeyFront();
                 break;
 
-            case 4:
+            case InputDirection.Down:
                 OnInputKeyBottom();
                 break;
 
-            case 0:
-                //int型関数の処理の都合で0を書いちゃったけどどうしようか
-                Debug.Log("どれにも当てはまらない");
+            case InputDirection.None:
                 break;
         }
     }

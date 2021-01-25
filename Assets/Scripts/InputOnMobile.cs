@@ -8,51 +8,52 @@ class InputOnMobile : IInputInterface
     /// 押した場所と最後に話した場所の座標差で上下左右の出力を変更する
     /// </summary>
     /// <returns></returns>
-    int IInputInterface.InputKey()
+    public InputDirection InputKey()
     {
         if (Input.touchCount > 0)
         {
             // タッチ情報の取得
             Touch touch = Input.GetTouch(0);
+            Vector2 startPos = Input.GetTouch(0).position;
 
-            Vector3 startPos = Input.GetTouch(0).position;
             if (touch.phase == TouchPhase.Began)
             {
-                //押した時の値をどうしよう
-                Debug.Log("押した瞬間");
+                startPos = Input.mousePosition;
             }
             
             if (touch.phase == TouchPhase.Ended)
             {
+
              Vector3 endPos = Input.GetTouch(0).position;
+
                 //右
-                if (endPos.x > startPos.x)
+                if (endPos.x > startPos.x && endPos.x - startPos.x > endPos.y - startPos.y)
                 {
-                    return 1;
+                    return InputDirection.Right;
                 }
 
                 //左
-                else if (endPos.x < startPos.x)
+                else if (endPos.x < startPos.x && startPos.x - endPos.x > endPos.y - startPos.y)
                 {
-                    return 2;
+                    return InputDirection.Left;
                 }
 
                 //上
-                else if (endPos.y > startPos.y)
+                else if (endPos.y > startPos.y && endPos.x - startPos.x < endPos.y - startPos.y)
                 {
-                    return 3;
+                    return InputDirection.Up;
                 }
 
                 //下
-                else if (endPos.y < startPos.y)
+                else if (endPos.y < startPos.y && endPos.x - startPos.x < startPos.y - endPos.y)
                 {
-                    return 4;
+                    return InputDirection.Down;
                 }
             }
 
           
         }
 
-        return 0;
+        return InputDirection.None;
     }
 }

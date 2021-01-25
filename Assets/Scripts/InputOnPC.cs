@@ -7,25 +7,25 @@ using UnityEngine;
 /// </summary>
 class InputOnPC : IInputInterface
 {
-     int IInputInterface.InputKey()
+    public InputDirection InputKey()
     {
         if (Input.GetKeyDown(KeyCode.RightArrow))
         {
-            return 1;
+            return InputDirection.Right;
         }
         else if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            return 2;
+            return InputDirection.Left;
         }
         else if (Input.GetKeyDown(KeyCode.UpArrow))
         {
-            return 3;
+            return InputDirection.Up;
         }
         else if (Input.GetKeyDown(KeyCode.DownArrow))
         {
-            return 4;
+            return InputDirection.Down;
         }
 
-        return 0;
+        return InputDirection.None;
     }
 }
