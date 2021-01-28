@@ -13,7 +13,7 @@ public class InGameView : MonoBehaviour
     [SerializeField] private Cell[] cells;
     [SerializeField] private Text scoreText;
     [SerializeField] private Text highScoreText;
-
+    private IInputInterface iInputInterface; 
 
     public event Action OnInputKeyRight;
     public event Action OnInputKeyLeft;
@@ -24,9 +24,35 @@ public class InGameView : MonoBehaviour
 
     public event Action OnHighScoreData;
 
+    
+    
 
+    /// <summary>
+    /// プラットフォーム判断し、インターフェースの実装しているスクリプトでそれぞれの挙動を記述する
+    /// </summary>
+    private void Start()
+    {
+        if (Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.IPhonePlayer)
+        {
+            iInputInterface = new InputOnMobile();
+        }
+        else if (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor)
+        {
+            iInputInterface = new InputOnPC();
+        }
+        else
+        {
+            iInputInterface = new InputOnPC();
+        }
+    }
+
+    /// <summary>
+    /// PCでもmobileでもOnInputKeyRight();
+    /// </summary>
     private void Update()
     {
+        //pcでもmobileでもInputKey()内の上下左右によって変わる出力をInGameViewに伝え、
+        //それぞれに対応するアクション型を出力する
         ObserveInputKey();
     }
 
@@ -66,22 +92,28 @@ public class InGameView : MonoBehaviour
 
     public void ObserveInputKey()
     {
-        if (Input.GetKeyDown(KeyCode.RightArrow))
+        InputDirection direction = iInputInterface.InputKey();
+        switch (direction)
         {
-            OnInputKeyRight();
-        }
-        else if (Input.GetKeyDown(KeyCode.LeftArrow))
-        {
+            case InputDirection.Right:
+                OnInputKeyRight();
+                Debug.Log("どれにも当てはまらない");
+                break;
 
-            OnInputKeyLeft();
-        }
-        else if (Input.GetKeyDown(KeyCode.UpArrow))
-        {
-            OnInputKeyFront();
-        }
-        else if (Input.GetKeyDown(KeyCode.DownArrow))
-        {
-            OnInputKeyBottom();
+            case InputDirection.Left:
+                OnInputKeyLeft();
+                break;
+
+            case InputDirection.Up:
+                OnInputKeyFront();
+                break;
+
+            case InputDirection.Down:
+                OnInputKeyBottom();
+                break;
+
+            case InputDirection.None:
+                break;
         }
     }
 
