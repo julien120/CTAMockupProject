@@ -25,22 +25,10 @@ public class InGameView : MonoBehaviour
 
     //こっちをpresenterが操作する.IObservalだとOnNextを発行できない
     public IObservable<Unit> OnInputKeyRight => InputKeyRightSubject;
+    public IObservable<Unit> OnInputKeyLeft => InputKeyLeftSubject;
+    public IObservable<Unit> OnInputKeyBottom => InputKeyBottomSubject;
+    public IObservable<Unit> OnInputKeyFront => InputKeyFrontSubject;
 
-
-    public IObservable<Unit> OnInputKeyLeft
-    {
-        get { return InputKeyLeftSubject; }
-    }
-
-    public IObservable<Unit> OnInputKeyBottom
-    {
-        get { return InputKeyBottomSubject; }
-    }
-
-    public IObservable<Unit> OnInputKeyFront
-    {
-        get { return InputKeyFrontSubject; }
-    }
 
 
     /// <summary>
@@ -113,7 +101,6 @@ public class InGameView : MonoBehaviour
         {
             case InputDirection.Right:
                 InputKeyRightSubject.OnNext(Unit.Default);
-                Debug.Log("どれにも当てはまらない");
                 break;
 
             case InputDirection.Left:

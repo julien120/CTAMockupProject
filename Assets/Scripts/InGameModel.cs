@@ -31,8 +31,8 @@ public class InGameModel : MonoBehaviour
     /// <summary>
     /// スコア管理
     /// </summary>
-    public event Action<int> OnChangeScore;
-    public event Action<int> OnChangeHighScore;
+    public ReactiveProperty<int> OnChangeScore = new ReactiveProperty<int>();
+    public ReactiveProperty<int> OnChangeHighScore = new ReactiveProperty<int>();
 
     //viewのSetScoreメソッドを引き渡し
     public event Action<int,int> OnChangedState;
@@ -180,8 +180,7 @@ public class InGameModel : MonoBehaviour
     /// <param name="cellValue">合成する数値マスの値</param>
     public void SetScore(int cellValue)
     {
-        score += cellValue * 2;
-        OnChangeScore(score);
+        OnChangeScore.Value += cellValue * 2;
     }
 
     public void CheckHighScore(int score)
@@ -189,7 +188,7 @@ public class InGameModel : MonoBehaviour
         if (score > HighScore) { 
             HighScore = score;
             PlayerPrefs.SetInt(PlayerPrefsKeys.ScoreHighData, HighScore);
-            OnChangeHighScore(HighScore);
+            OnChangeHighScore.Value = HighScore;
         }
     }
 
@@ -382,7 +381,7 @@ public class InGameModel : MonoBehaviour
         
         score = 0;
         PlayerPrefs.SetInt(PlayerPrefsKeys.ScoreData, score);
-        OnChangeScore(0);
+        OnChangeScore.Value = score;
         Initialize();
     }
 

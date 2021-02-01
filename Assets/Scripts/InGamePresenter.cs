@@ -29,11 +29,11 @@ public class  InGamePresenter : MonoBehaviour
         inGameView.OnInputKeyBottom.Subscribe(_ => inGameModel.KeyBottomValue());
         inGameView.OnInputKeyFront.Subscribe(_ => inGameModel.KeyFrontValue());
 
-     
+
 
         //modelのスコア判定をviewに伝え、描画する
-        inGameModel.OnChangeScore += inGameView.SetScore;
-        inGameModel.OnChangeHighScore += inGameView.SetHighScore;
+        inGameModel.OnChangeScore.Subscribe(OnChangeScore => inGameView.SetScore(OnChangeScore));
+        inGameModel.OnChangeHighScore.Subscribe(OnChangeHighScore => inGameView.SetHighScore(OnChangeHighScore));
 
         inGameModel.OnChangedState += inGameView.Apply;
 
