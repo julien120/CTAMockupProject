@@ -16,17 +16,31 @@ public class InGameView : MonoBehaviour
     [SerializeField] private Text highScoreText;
     private IInputInterface iInputInterface; 
 
-    //public event Action OnInputKeyRight;
-    public event Action OnInputKeyLeft;
-    public event Action OnInputKeyBottom;
-    public event Action OnInputKeyFront;
-
     public event Action OnOpenMenu;
 
+    private Subject<Unit> InputKeyRightSubject = new Subject<Unit>();
+    private Subject<Unit> InputKeyLeftSubject = new Subject<Unit>();
+    private Subject<Unit> InputKeyBottomSubject = new Subject<Unit>();
+    private Subject<Unit> InputKeyFrontSubject = new Subject<Unit>();
 
-    public Subject<Unit> OnInputKeyRight = new Subject<Unit>();
+    //こっちをpresenterが操作する.IObservalだとOnNextを発行できない
+    public IObservable<Unit> OnInputKeyRight => InputKeyRightSubject;
 
 
+    public IObservable<Unit> OnInputKeyLeft
+    {
+        get { return InputKeyLeftSubject; }
+    }
+
+    public IObservable<Unit> OnInputKeyBottom
+    {
+        get { return InputKeyBottomSubject; }
+    }
+
+    public IObservable<Unit> OnInputKeyFront
+    {
+        get { return InputKeyFrontSubject; }
+    }
 
 
     /// <summary>
@@ -98,20 +112,20 @@ public class InGameView : MonoBehaviour
         switch (direction)
         {
             case InputDirection.Right:
-                OnInputKeyRight.OnNext(Unit.Default);
+                InputKeyRightSubject.OnNext(Unit.Default);
                 Debug.Log("どれにも当てはまらない");
                 break;
 
             case InputDirection.Left:
-                OnInputKeyLeft();
+                InputKeyLeftSubject.OnNext(Unit.Default);
                 break;
 
             case InputDirection.Up:
-                OnInputKeyFront();
+                InputKeyFrontSubject.OnNext(Unit.Default);
                 break;
 
             case InputDirection.Down:
-                OnInputKeyBottom();
+                InputKeyBottomSubject.OnNext(Unit.Default);
                 break;
 
             case InputDirection.None:

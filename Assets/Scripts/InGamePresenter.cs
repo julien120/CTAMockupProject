@@ -25,10 +25,9 @@ public class  InGamePresenter : MonoBehaviour
 
         //キー入力の通知をmodelに引き渡し、通知の値によって描画するセルを決定する
         inGameView.OnInputKeyRight.Subscribe(_ => inGameModel.KeyRightValue());
-        //+= inGameModel.KeyRightValue;
-        inGameView.OnInputKeyLeft += inGameModel.KeyleftValue;
-        inGameView.OnInputKeyBottom += inGameModel.KeyBottomValue;
-        inGameView.OnInputKeyFront += inGameModel.KeyFrontValue;
+        inGameView.OnInputKeyLeft.Subscribe(_ => inGameModel.KeyleftValue());
+        inGameView.OnInputKeyBottom.Subscribe(_ => inGameModel.KeyBottomValue());
+        inGameView.OnInputKeyFront.Subscribe(_ => inGameModel.KeyFrontValue());
 
      
 
