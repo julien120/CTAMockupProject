@@ -18,16 +18,16 @@ public class InGameView : MonoBehaviour
 
     public event Action OnOpenMenu;
 
-    private Subject<Unit> InputKeyRightSubject = new Subject<Unit>();
-    private Subject<Unit> InputKeyLeftSubject = new Subject<Unit>();
-    private Subject<Unit> InputKeyBottomSubject = new Subject<Unit>();
-    private Subject<Unit> InputKeyFrontSubject = new Subject<Unit>();
+    private Subject<Unit> inputKeyRightSubject = new Subject<Unit>();
+    private Subject<Unit> inputKeyLeftSubject = new Subject<Unit>();
+    private Subject<Unit> inputKeyBottomSubject = new Subject<Unit>();
+    private Subject<Unit> inputKeyFrontSubject = new Subject<Unit>();
 
     //こっちをpresenterが操作する.IObservalだとOnNextを発行できない
-    public IObservable<Unit> OnInputKeyRight => InputKeyRightSubject;
-    public IObservable<Unit> OnInputKeyLeft => InputKeyLeftSubject;
-    public IObservable<Unit> OnInputKeyBottom => InputKeyBottomSubject;
-    public IObservable<Unit> OnInputKeyFront => InputKeyFrontSubject;
+    public IObservable<Unit> OnInputKeyRight => inputKeyRightSubject;
+    public IObservable<Unit> OnInputKeyLeft => inputKeyLeftSubject;
+    public IObservable<Unit> OnInputKeyBottom => inputKeyBottomSubject;
+    public IObservable<Unit> OnInputKeyFront => inputKeyFrontSubject;
 
 
 
@@ -100,19 +100,19 @@ public class InGameView : MonoBehaviour
         switch (direction)
         {
             case InputDirection.Right:
-                InputKeyRightSubject.OnNext(Unit.Default);
+                inputKeyRightSubject.OnNext(Unit.Default);
                 break;
 
             case InputDirection.Left:
-                InputKeyLeftSubject.OnNext(Unit.Default);
+                inputKeyLeftSubject.OnNext(Unit.Default);
                 break;
 
             case InputDirection.Up:
-                InputKeyFrontSubject.OnNext(Unit.Default);
+                inputKeyFrontSubject.OnNext(Unit.Default);
                 break;
 
             case InputDirection.Down:
-                InputKeyBottomSubject.OnNext(Unit.Default);
+                inputKeyBottomSubject.OnNext(Unit.Default);
                 break;
 
             case InputDirection.None:

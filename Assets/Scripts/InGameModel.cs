@@ -35,7 +35,9 @@ public class InGameModel : MonoBehaviour
     public ReactiveProperty<int> OnChangeHighScore = new ReactiveProperty<int>();
 
     //viewのSetScoreメソッドを引き渡し
-    public event Action<int,int> OnChangedState;
+    //public event Action<int,int> OnChangedState;
+    private Subject<(int,int)> changedState = new Subject<(int,int)>();
+    public IObservable<(int,int)> OnChangedState => changedState;
 
     /// <summary>
     /// 盤面の再描画を行う必要があるかのフラグ
@@ -67,7 +69,8 @@ public class InGameModel : MonoBehaviour
         {
             for (var j = 0; j < colStage; j++)
             {
-                OnChangedState(i * rowStage + j, stageStates[i, j]);
+                var indexAndstageStates = (i * rowStage + j, stageStates[i, j]);
+                changedState.OnNext(indexAndstageStates);
             }
         }
         HighScore = PlayerPrefs.GetInt(PlayerPrefsKeys.ScoreHighData);
@@ -168,7 +171,8 @@ public class InGameModel : MonoBehaviour
         {
             for (var j = 0; j < colStage; j++)
             {
-                OnChangedState(i * rowStage + j, stageStates[i, j]);
+                var indexAndstageStates = (i * rowStage + j, stageStates[i, j]);
+                changedState.OnNext(indexAndstageStates);
             }
         }
     }

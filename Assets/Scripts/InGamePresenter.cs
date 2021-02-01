@@ -35,7 +35,7 @@ public class  InGamePresenter : MonoBehaviour
         inGameModel.OnChangeScore.Subscribe(OnChangeScore => inGameView.SetScore(OnChangeScore));
         inGameModel.OnChangeHighScore.Subscribe(OnChangeHighScore => inGameView.SetHighScore(OnChangeHighScore));
 
-        inGameModel.OnChangedState += inGameView.Apply;
+        inGameModel.OnChangedState.Subscribe(OnChangedState => inGameView.Apply(OnChangedState.Item1, OnChangedState.Item2));
 
         inGameModel.Initialize();
         inGameView.SetHighScore(inGameModel.HighScore);
