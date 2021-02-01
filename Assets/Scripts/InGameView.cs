@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System;
+using UniRx;
 
 /// <summary>
 /// 「Viewは画面の描画やユーザー操作を実装するクラス」
@@ -15,17 +16,18 @@ public class InGameView : MonoBehaviour
     [SerializeField] private Text highScoreText;
     private IInputInterface iInputInterface; 
 
-    public event Action OnInputKeyRight;
+    //public event Action OnInputKeyRight;
     public event Action OnInputKeyLeft;
     public event Action OnInputKeyBottom;
     public event Action OnInputKeyFront;
 
     public event Action OnOpenMenu;
 
-    public event Action OnHighScoreData;
 
-    
-    
+    public Subject<Unit> OnInputKeyRight = new Subject<Unit>();
+
+
+
 
     /// <summary>
     /// プラットフォーム判断し、インターフェースの実装しているスクリプトでそれぞれの挙動を記述する
@@ -96,7 +98,7 @@ public class InGameView : MonoBehaviour
         switch (direction)
         {
             case InputDirection.Right:
-                OnInputKeyRight();
+                OnInputKeyRight.OnNext(Unit.Default);
                 Debug.Log("どれにも当てはまらない");
                 break;
 

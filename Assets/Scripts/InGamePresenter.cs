@@ -1,5 +1,6 @@
 using UnityEngine;
 using System;
+using UniRx;
 
 /// <summary>
 /// 「Presenterはmodel-Viewクラス間の橋渡し、挙動の監視を行うクラス」
@@ -23,7 +24,8 @@ public class  InGamePresenter : MonoBehaviour
         // Modelの値の変更を監視する
 
         //キー入力の通知をmodelに引き渡し、通知の値によって描画するセルを決定する
-        inGameView.OnInputKeyRight += inGameModel.KeyRightValue;
+        inGameView.OnInputKeyRight.Subscribe(_ => inGameModel.KeyRightValue());
+        //+= inGameModel.KeyRightValue;
         inGameView.OnInputKeyLeft += inGameModel.KeyleftValue;
         inGameView.OnInputKeyBottom += inGameModel.KeyBottomValue;
         inGameView.OnInputKeyFront += inGameModel.KeyFrontValue;
