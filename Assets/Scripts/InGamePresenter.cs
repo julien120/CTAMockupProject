@@ -42,10 +42,9 @@ public class  InGamePresenter : MonoBehaviour
 
         //menuを開いたときの処理：キー入力禁止、リスタートボタンの実装        
         menuWindowPresenter.Initialize();
-        menuWindowPresenter.OnKeyOn += inGameModel.CanInputKey;
-        menuWindowPresenter.OnRestart += inGameModel.RestartGame;
-        inGameView.OnOpenMenu += OpenMenu;
-
+        menuWindowPresenter.OnKeyOn.Subscribe(_ => inGameModel.CanInputKey());
+        menuWindowPresenter.OnRestart.Subscribe(_ => inGameModel.RestartGame());
+        inGameView.OnOpenMenu.Subscribe(_ => OpenMenu());
     }
 
 

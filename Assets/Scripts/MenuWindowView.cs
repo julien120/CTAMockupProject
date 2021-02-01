@@ -3,11 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using UniRx;
 
 public class MenuWindowView : MonoBehaviour
 {
-    public event Action OnRestart;
-    public event Action OnKeyOn;
+    private Subject<Unit> restart = new Subject<Unit>();
+    public IObservable<Unit> OnRestart => restart;
+
+    private Subject<Unit> keyOn = new Subject<Unit>();
+    public IObservable<Unit> OnKeyOn => keyOn;
+
 
     [SerializeField] GameObject menu;
 
@@ -17,7 +22,7 @@ public class MenuWindowView : MonoBehaviour
     public void CloseWindow()
     {
         gameObject.SetActive(false);
-        OnKeyOn();
+        keyOn.OnNext(Unit.Default);
     }
 
     /// <summary>
@@ -37,7 +42,7 @@ public class MenuWindowView : MonoBehaviour
     {
         //リスタート処理{再描画とスコア０が含まれているか？分割するか}
         Debug.Log("リスタートボタン押した");
-        OnRestart();
+        restart.OnNext(Unit.Default);
 
 
     }

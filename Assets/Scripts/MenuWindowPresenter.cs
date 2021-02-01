@@ -2,21 +2,25 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using UniRx;
 
 public class MenuWindowPresenter : MonoBehaviour
 {
     [SerializeField] MenuWindowView menuWindowView;
 
-    public event Action OnKeyOn;
-    public event Action OnRestart;
+    private Subject<Unit> keyOn = new Subject<Unit>();
+    public IObservable<Unit> OnKeyOn => keyOn;
+
+    private Subject<Unit> restart = new Subject<Unit>();
+    public IObservable<Unit> OnRestart => restart;
 
     public void Initialize()
     {
         //メニューを閉めている時
-        menuWindowView.OnKeyOn +=()=> OnKeyOn?.Invoke();
+        menuWindowView.OnKeyOn.Subscribe(_ => keyOn.OnNext(Unit.Default));
 
         //リスタートボタンを押した時
-        menuWindowView.OnRestart += () => OnRestart?.Invoke();
+        menuWindowView.OnRestart.Subscribe(_ => restart.OnNext(Unit.Default));
     }
 
     public void OpenMenu()

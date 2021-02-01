@@ -16,7 +16,8 @@ public class InGameView : MonoBehaviour
     [SerializeField] private Text highScoreText;
     private IInputInterface iInputInterface; 
 
-    public event Action OnOpenMenu;
+    private Subject<Unit> openMenu = new Subject<Unit>();
+    public IObservable<Unit> OnOpenMenu => openMenu;
 
     private Subject<Unit> inputKeyRightSubject = new Subject<Unit>();
     private Subject<Unit> inputKeyLeftSubject = new Subject<Unit>();
@@ -127,7 +128,7 @@ public class InGameView : MonoBehaviour
     public void OpenWindow()
     {
         //メニューを開く:MenuWindow.Viewに繋がっている
-        OnOpenMenu();
+        openMenu.OnNext(Unit.Default);
     }
 
 }
