@@ -24,21 +24,17 @@ public class  InGamePresenter : MonoBehaviour
         // Modelの値の変更を監視する
 
         //キー入力の通知をmodelに引き渡し、通知の値によって描画するセルを決定する
-        inGameView.OnInputKeyRight.Subscribe(_ => inGameModel.KeyRightValue());
-        inGameView.OnInputKeyLeft.Subscribe(_ => inGameModel.KeyleftValue());
-        inGameView.OnInputKeyBottom.Subscribe(_ => inGameModel.KeyBottomValue());
-        inGameView.OnInputKeyFront.Subscribe(_ => inGameModel.KeyFrontValue());
-
+        inGameView.InputKeySubject.Subscribe(InputKeySubject => inGameModel.ObserveInputKey(InputKeySubject));
 
 
         //modelのスコア判定をviewに伝え、描画する
-        inGameModel.OnChangeScore.Subscribe(OnChangeScore => inGameView.SetScore(OnChangeScore));
-        inGameModel.OnChangeHighScore.Subscribe(OnChangeHighScore => inGameView.SetHighScore(OnChangeHighScore));
+        inGameModel.Score.Subscribe(Score => inGameView.SetScore(Score));
+        inGameModel.HighScore.Subscribe(HighScore => inGameView.SetHighScore(HighScore));
 
         inGameModel.OnChangedState.Subscribe(OnChangedState => inGameView.Apply(OnChangedState.Item1, OnChangedState.Item2));
 
         inGameModel.Initialize();
-        inGameView.SetHighScore(inGameModel.HighScore);
+        inGameView.SetHighScore(inGameModel.DataHighScore);
 
         //menuを開いたときの処理：キー入力禁止、リスタートボタンの実装        
         menuWindowPresenter.Initialize();

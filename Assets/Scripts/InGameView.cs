@@ -19,16 +19,11 @@ public class InGameView : MonoBehaviour
     private Subject<Unit> openMenu = new Subject<Unit>();
     public IObservable<Unit> OnOpenMenu => openMenu;
 
-    private Subject<Unit> inputKeyRightSubject = new Subject<Unit>();
-    private Subject<Unit> inputKeyLeftSubject = new Subject<Unit>();
-    private Subject<Unit> inputKeyBottomSubject = new Subject<Unit>();
-    private Subject<Unit> inputKeyFrontSubject = new Subject<Unit>();
+    private Subject<InputDirection> inputKeySubject = new Subject<InputDirection>();
 
     //こっちをpresenterが操作する.IObservalだとOnNextを発行できない
-    public IObservable<Unit> OnInputKeyRight => inputKeyRightSubject;
-    public IObservable<Unit> OnInputKeyLeft => inputKeyLeftSubject;
-    public IObservable<Unit> OnInputKeyBottom => inputKeyBottomSubject;
-    public IObservable<Unit> OnInputKeyFront => inputKeyFrontSubject;
+    public IObservable<InputDirection> InputKeySubject => inputKeySubject;
+
 
 
 
@@ -101,25 +96,27 @@ public class InGameView : MonoBehaviour
         switch (direction)
         {
             case InputDirection.Right:
-                inputKeyRightSubject.OnNext(Unit.Default);
+                inputKeySubject.OnNext(InputDirection.Right);
                 break;
 
             case InputDirection.Left:
-                inputKeyLeftSubject.OnNext(Unit.Default);
+                inputKeySubject.OnNext(InputDirection.Left);
                 break;
 
             case InputDirection.Up:
-                inputKeyFrontSubject.OnNext(Unit.Default);
+                inputKeySubject.OnNext(InputDirection.Up);
                 break;
 
             case InputDirection.Down:
-                inputKeyBottomSubject.OnNext(Unit.Default);
+                inputKeySubject.OnNext(InputDirection.Down);
                 break;
 
             case InputDirection.None:
                 break;
         }
     }
+
+
 
     /// <summary>
     /// Windowを表示する
