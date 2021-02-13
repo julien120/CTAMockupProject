@@ -31,8 +31,10 @@ public class InGameModel : MonoBehaviour
     /// <summary>
     /// スコア管理
     /// </summary>
-    public ReactiveProperty<int> Score { get; } = new ReactiveProperty<int>();
-    public ReactiveProperty<int> HighScore { get; } = new ReactiveProperty<int>();
+    private ReactiveProperty<int> score { get; } = new ReactiveProperty<int>();
+    private ReactiveProperty<int> highScore { get; } = new ReactiveProperty<int>();
+    public IObservable<int> OnScore => score;
+    public IObservable<int> OnHighScore => highScore;
 
     //viewのSetScoreメソッドを引き渡し
     //public event Action<int,int> OnChangedState;
@@ -197,7 +199,7 @@ public class InGameModel : MonoBehaviour
     /// <param name="cellValue">合成する数値マスの値</param>
     public void SetScore(int cellValue)
     {
-        Score.Value += cellValue * 2;
+        score.Value += cellValue * 2;
     }
 
     public void CheckHighScore(int score)
@@ -205,7 +207,7 @@ public class InGameModel : MonoBehaviour
         if (score > DataHighScore) { 
             DataHighScore = score;
             PlayerPrefs.SetInt(PlayerPrefsKeys.ScoreHighData, DataHighScore);
-            HighScore.Value = DataHighScore;
+            highScore.Value = DataHighScore;
         }
     }
 
@@ -398,7 +400,7 @@ public class InGameModel : MonoBehaviour
         
         dataScore = 0;
         PlayerPrefs.SetInt(PlayerPrefsKeys.ScoreData, dataScore);
-        Score.Value = dataScore;
+        score.Value = dataScore;
         Initialize();
     }
 

@@ -28,8 +28,8 @@ public class  InGamePresenter : MonoBehaviour
 
 
         //modelのスコア判定をviewに伝え、描画する
-        inGameModel.Score.Subscribe(Score => inGameView.SetScore(Score));
-        inGameModel.HighScore.Subscribe(HighScore => inGameView.SetHighScore(HighScore));
+        inGameModel.OnScore.Subscribe(OnScore => inGameView.SetScore(OnScore));
+        inGameModel.OnHighScore.Subscribe(OnHighScore => inGameView.SetHighScore(OnHighScore));
 
         inGameModel.OnChangedState.Subscribe(OnChangedState => inGameView.Apply(OnChangedState.Item1, OnChangedState.Item2));
 
