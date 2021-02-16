@@ -16,10 +16,10 @@ public class InGameView : MonoBehaviour
     [SerializeField] private Text highScoreText;
     private IInputInterface iInputInterface; 
 
-    private Subject<Unit> openMenu = new Subject<Unit>();
+    private readonly Subject<Unit> openMenu = new Subject<Unit>();
     public IObservable<Unit> OnOpenMenu => openMenu;
 
-    private Subject<InputDirection> inputKeySubject = new Subject<InputDirection>();
+    private readonly Subject<InputDirection> inputKeySubject = new Subject<InputDirection>();
 
     //こっちをpresenterが操作する.IObservalだとOnNextを発行できない
     public IObservable<InputDirection> InputKeySubject => inputKeySubject;

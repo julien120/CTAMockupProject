@@ -38,7 +38,7 @@ public class InGameModel : MonoBehaviour
 
     //viewのSetScoreメソッドを引き渡し
     //public event Action<int,int> OnChangedState;
-    private Subject<(int,int)> changedState = new Subject<(int,int)>();
+    private readonly Subject<(int,int)> changedState = new Subject<(int,int)>();
     public IObservable<(int,int)> OnChangedState => changedState;
 
     /// <summary>
