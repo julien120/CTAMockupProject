@@ -7,10 +7,10 @@ using UniRx;
 
 public class MenuWindowView : MonoBehaviour
 {
-    private Subject<Unit> restart = new Subject<Unit>();
+    private readonly Subject<Unit> restart = new Subject<Unit>();
     public IObservable<Unit> OnRestart => restart;
 
-    private Subject<Unit> keyOn = new Subject<Unit>();
+    private readonly Subject<Unit> keyOn = new Subject<Unit>();
     public IObservable<Unit> OnKeyOn => keyOn;
 
 
