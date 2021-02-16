@@ -8,10 +8,10 @@ public class MenuWindowPresenter : MonoBehaviour
 {
     [SerializeField] MenuWindowView menuWindowView;
 
-    private Subject<Unit> keyOn = new Subject<Unit>();
+    private readonly Subject<Unit> keyOn = new Subject<Unit>();
     public IObservable<Unit> OnKeyOn => keyOn;
 
-    private Subject<Unit> restart = new Subject<Unit>();
+    private readonly Subject<Unit> restart = new Subject<Unit>();
     public IObservable<Unit> OnRestart => restart;
 
     public void Initialize()
