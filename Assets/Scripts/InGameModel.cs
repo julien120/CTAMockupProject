@@ -31,8 +31,8 @@ public class InGameModel : MonoBehaviour
     /// <summary>
     /// スコア管理
     /// </summary>
-    private ReactiveProperty<int> score { get; } = new ReactiveProperty<int>();
-    private ReactiveProperty<int> highScore { get; } = new ReactiveProperty<int>();
+    private readonly ReactiveProperty<int> score = new ReactiveProperty<int>();
+    private readonly ReactiveProperty<int> highScore = new ReactiveProperty<int>();
     public IObservable<int> OnScore => score;
     public IObservable<int> OnHighScore => highScore;
 
