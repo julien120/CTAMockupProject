@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System;
+using UniRx;
 
 /// <summary>
 /// 「Viewは画面の描画やユーザー操作を実装するクラス」
@@ -15,17 +16,16 @@ public class InGameView : MonoBehaviour
     [SerializeField] private Text highScoreText;
     private IInputInterface iInputInterface; 
 
-    public event Action OnInputKeyRight;
-    public event Action OnInputKeyLeft;
-    public event Action OnInputKeyBottom;
-    public event Action OnInputKeyFront;
+    private readonly Subject<Unit> openMenu = new Subject<Unit>();
+    public IObservable<Unit> OnOpenMenu => openMenu;
 
-    public event Action OnOpenMenu;
+    private readonly Subject<InputDirection> inputKeySubject = new Subject<InputDirection>();
 
-    public event Action OnHighScoreData;
+    //こっちをpresenterが操作する.IObservalだとOnNextを発行できない
+    public IObservable<InputDirection> InputKeySubject => inputKeySubject;
 
-    
-    
+
+
 
     /// <summary>
     /// プラットフォーム判断し、インターフェースの実装しているスクリプトでそれぞれの挙動を記述する
@@ -96,26 +96,27 @@ public class InGameView : MonoBehaviour
         switch (direction)
         {
             case InputDirection.Right:
-                OnInputKeyRight();
-                Debug.Log("どれにも当てはまらない");
+                inputKeySubject.OnNext(InputDirection.Right);
                 break;
 
             case InputDirection.Left:
-                OnInputKeyLeft();
+                inputKeySubject.OnNext(InputDirection.Left);
                 break;
 
             case InputDirection.Up:
-                OnInputKeyFront();
+                inputKeySubject.OnNext(InputDirection.Up);
                 break;
 
             case InputDirection.Down:
-                OnInputKeyBottom();
+                inputKeySubject.OnNext(InputDirection.Down);
                 break;
 
             case InputDirection.None:
                 break;
         }
     }
+
+
 
     /// <summary>
     /// Windowを表示する
@@ -124,7 +125,7 @@ public class InGameView : MonoBehaviour
     public void OpenWindow()
     {
         //メニューを開く:MenuWindow.Viewに繋がっている
-        OnOpenMenu();
+        openMenu.OnNext(Unit.Default);
     }
 
 }

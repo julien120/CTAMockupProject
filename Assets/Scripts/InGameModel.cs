@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System;
+using UniRx;
 using Random = UnityEngine.Random;
 
 /// <summary>
@@ -24,17 +25,21 @@ public class InGameModel : MonoBehaviour
     /// <summary>
     /// -スコアを管理
     /// </summary>
-    private int score { get; set; }
-    public int HighScore = 0;
+    private int dataScore { get; set; }
+    public int DataHighScore = 0;
 
     /// <summary>
     /// スコア管理
     /// </summary>
-    public event Action<int> OnChangeScore;
-    public event Action<int> OnChangeHighScore;
+    private readonly ReactiveProperty<int> score = new ReactiveProperty<int>();
+    private readonly ReactiveProperty<int> highScore = new ReactiveProperty<int>();
+    public IObservable<int> OnScore => score;
+    public IObservable<int> OnHighScore => highScore;
 
     //viewのSetScoreメソッドを引き渡し
-    public event Action<int,int> OnChangedState;
+    //public event Action<int,int> OnChangedState;
+    private readonly Subject<(int,int)> changedState = new Subject<(int,int)>();
+    public IObservable<(int,int)> OnChangedState => changedState;
 
     /// <summary>
     /// 盤面の再描画を行う必要があるかのフラグ
@@ -66,98 +71,112 @@ public class InGameModel : MonoBehaviour
         {
             for (var j = 0; j < colStage; j++)
             {
-                OnChangedState(i * rowStage + j, stageStates[i, j]);
+                var indexAndstageStates = (i * rowStage + j, stageStates[i, j]);
+                changedState.OnNext(indexAndstageStates);
             }
         }
-        HighScore = PlayerPrefs.GetInt(PlayerPrefsKeys.ScoreHighData);
+        DataHighScore = PlayerPrefs.GetInt(PlayerPrefsKeys.ScoreHighData);
         ApplyGameOverData();
     }
 
-    public void KeyRightValue()
+
+    public void ObserveInputKey(InputDirection direction)
     {
-      if (!isKeyOn) { 
-        isDirty = false;
+        switch (direction)
+        {
+            case InputDirection.Right:
 
-        for (var col = colStage; col >= 0; col--)
-        {
-            for (var row = 0; row < rowStage; row++)
-            {
-                CheckCell(row, col, 1, 0);
-            }
-        }
-        if (isDirty)
-        {
-            CreateNewRandomCell();
-            DrawChangedStates();
-            ApplyGameOverData();
-        }
-      }
-
-    }
-    public void KeyleftValue()
-    {
-        if (!isKeyOn) { 
-        
-            isDirty = false;
-
-        for (var row = 0; row < rowStage; row++)
-        {
-            for (var col = 0; col < colStage; col++)
-            {
-                CheckCell(row, col, -1, 0);
-            }
-        }
-        if (isDirty)
-        {
-            CreateNewRandomCell();
-            DrawChangedStates();
-            ApplyGameOverData();
-        }
-        }
-    }
-    public void KeyBottomValue()
-    {
-        if (!isKeyOn)
-        {
-            isDirty = false;
-
-            for (var row = rowStage; row >= 0; row--)
-            {
-                for (var col = 0; col < colStage; col++)
+                if (!isKeyOn)
                 {
-                    CheckCell(row, col, 0, 1);
-                }
-            }
-            if (isDirty)
-            {
-                CreateNewRandomCell();
-                DrawChangedStates();
-                ApplyGameOverData();
-            }
-        }
-    }
-    public void KeyFrontValue()
-    {
-        if (!isKeyOn)
-        {
-            isDirty = false;
+                    isDirty = false;
 
-            for (var row = 0; row < rowStage; row++)
-            {
-                for (var col = 0; col < colStage; col++)
-                {
-                    CheckCell(row, col, 0, -1);
+                    for (var col = colStage; col >= 0; col--)
+                    {
+                        for (var row = 0; row < rowStage; row++)
+                        {
+                            CheckCell(row, col, 1, 0);
+                        }
+                    }
+                    if (isDirty)
+                    {
+                        CreateNewRandomCell();
+                        DrawChangedStates();
+                        ApplyGameOverData();
+                    }
                 }
-            }
-            //もしisDirtyであれば、OnChangedState()する
-            if (isDirty)
-            {
-                CreateNewRandomCell();
-                DrawChangedStates();
-                ApplyGameOverData();
-            }
+                    break;
+
+            case InputDirection.Left:
+
+                if (!isKeyOn)
+                {
+
+                    isDirty = false;
+
+                    for (var row = 0; row < rowStage; row++)
+                    {
+                        for (var col = 0; col < colStage; col++)
+                        {
+                            CheckCell(row, col, -1, 0);
+                        }
+                    }
+                    if (isDirty)
+                    {
+                        CreateNewRandomCell();
+                        DrawChangedStates();
+                        ApplyGameOverData();
+                    }
+                }
+                break;
+
+            case InputDirection.Up:
+                if (!isKeyOn)
+                {
+                    isDirty = false;
+
+                    for (var row = 0; row < rowStage; row++)
+                    {
+                        for (var col = 0; col < colStage; col++)
+                        {
+                            CheckCell(row, col, 0, -1);
+                        }
+                    }
+                    //もしisDirtyであれば、OnChangedState()する
+                    if (isDirty)
+                    {
+                        CreateNewRandomCell();
+                        DrawChangedStates();
+                        ApplyGameOverData();
+                    }
+                }
+                break;
+
+            case InputDirection.Down:
+                if (!isKeyOn)
+                {
+                    isDirty = false;
+
+                    for (var row = rowStage; row >= 0; row--)
+                    {
+                        for (var col = 0; col < colStage; col++)
+                        {
+                            CheckCell(row, col, 0, 1);
+                        }
+                    }
+                    if (isDirty)
+                    {
+                        CreateNewRandomCell();
+                        DrawChangedStates();
+                        ApplyGameOverData();
+                    }
+                }
+                break;
+
+            case InputDirection.None:
+                break;
         }
     }
+
 
     ///<summary>
     ///</summary>
@@ -167,7 +186,8 @@ public class InGameModel : MonoBehaviour
         {
             for (var j = 0; j < colStage; j++)
             {
-                OnChangedState(i * rowStage + j, stageStates[i, j]);
+                var indexAndStageStates = (i * rowStage + j, stageStates[i, j]);
+                changedState.OnNext(indexAndStageStates);
             }
         }
     }
@@ -179,16 +199,15 @@ public class InGameModel : MonoBehaviour
     /// <param name="cellValue">合成する数値マスの値</param>
     public void SetScore(int cellValue)
     {
-        score += cellValue * 2;
-        OnChangeScore(score);
+        score.Value += cellValue * 2;
     }
 
     public void CheckHighScore(int score)
     {
-        if (score > HighScore) { 
-            HighScore = score;
-            PlayerPrefs.SetInt(PlayerPrefsKeys.ScoreHighData, HighScore);
-            OnChangeHighScore(HighScore);
+        if (score > DataHighScore) { 
+            DataHighScore = score;
+            PlayerPrefs.SetInt(PlayerPrefsKeys.ScoreHighData, DataHighScore);
+            highScore.Value = DataHighScore;
         }
     }
 
@@ -311,7 +330,7 @@ public class InGameModel : MonoBehaviour
         if (IsGameOver())
         {
 
-            CheckHighScore(score);
+            CheckHighScore(dataScore);
             LoadRestartScene();
         }
     }
@@ -350,7 +369,7 @@ public class InGameModel : MonoBehaviour
             stageStates[row, column] = 0;
             stageStates[nextRow, nextCol] = value * 2;
             SetScore(value);
-            CheckHighScore(score);
+            CheckHighScore(dataScore);
         }
         // 異なる値のときは移動処理を終了
         else if (value != nextValue)
@@ -372,16 +391,16 @@ public class InGameModel : MonoBehaviour
 
     public void LoadRestartScene()
     {
-        PlayerPrefs.SetInt(PlayerPrefsKeys.ScoreData, score);
+        PlayerPrefs.SetInt(PlayerPrefsKeys.ScoreData, dataScore);
         SceneController.Instance.LoadResultScene();
     }
 
     public void RestartGame()
     {
         
-        score = 0;
-        PlayerPrefs.SetInt(PlayerPrefsKeys.ScoreData, score);
-        OnChangeScore(0);
+        dataScore = 0;
+        PlayerPrefs.SetInt(PlayerPrefsKeys.ScoreData, dataScore);
+        score.Value = dataScore;
         Initialize();
     }
 
