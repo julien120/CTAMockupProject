@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System;
 using UniRx;
+using System.IO;
 using Random = UnityEngine.Random;
 
 /// <summary>
@@ -25,7 +26,7 @@ public class InGameModel : MonoBehaviour
     /// <summary>
     /// -スコアを管理
     /// </summary>
-    private int dataScore { get; set; }
+    public int dataScore{ get; set; }
     public int DataHighScore = 0;
 
     /// <summary>
@@ -48,11 +49,25 @@ public class InGameModel : MonoBehaviour
 
     private bool isKeyOn = false;
 
+
+    //highScoreDataをランキング化する
+    [System.Serializable]
+    private struct highScoreData
+    {
+        public int DataHighScore;
+    }
+
+    // ファイルパス
+    private string _dataPath;
+
     ///<summary>
     ///画面に描画する処理：ステージの初期状態を生成
     ///</summary>
     public void Initialize()
     {
+        // ファイルのパスを計算
+        _dataPath = Path.Combine(Application.persistentDataPath, "highScore.json");
+
         for (var i = 0; i < rowStage; i++)
         {
             for (var j = 0; j < colStage; j++)
@@ -76,10 +91,27 @@ public class InGameModel : MonoBehaviour
             }
         }
         //TODO:デシリアライズする
-        DataHighScore = PlayerPrefs.GetInt(PlayerPrefsKeys.ScoreHighData);
+        //DataHighScore = PlayerPrefs.GetInt(PlayerPrefsKeys.ScoreHighData);
+        OnLoad();
         ApplyGameOverData();
     }
 
+
+
+    private void OnLoad()
+    {
+        // 念のためファイルの存在チェック
+        if (!File.Exists(_dataPath)) return;
+
+        // JSONデータとしてデータを読み込む
+        var json = File.ReadAllText(_dataPath);
+
+        // JSON形式からオブジェクトにデシリアライズ
+        var obj = JsonUtility.FromJson<highScoreData>(json);
+
+        // Transformにオブジェクトのデータをセット
+        DataHighScore = obj.DataHighScore;
+    }
 
     public void ObserveInputKey(InputDirection direction)
     {
@@ -206,11 +238,28 @@ public class InGameModel : MonoBehaviour
     //TODO:スコアデータをランキングデータとしてjsonファイルに格納する。
     public void CheckHighScore(int score)
     {
-        if (score > DataHighScore) { 
+        if (score > DataHighScore) {
             DataHighScore = score;
-            PlayerPrefs.SetInt(PlayerPrefsKeys.ScoreHighData, DataHighScore);
+            //PlayerPrefs.SetInt(PlayerPrefsKeys.ScoreHighData, DataHighScore);
+            //highScore.Value = DataHighScore;
+            OnSave();
             highScore.Value = DataHighScore;
         }
+    }
+
+    private void OnSave()
+    {
+        // シリアライズするオブジェクトを作成
+        var obj = new highScoreData
+        {
+            DataHighScore = DataHighScore
+        };
+
+        // JSON形式にシリアライズ
+        var json = JsonUtility.ToJson(obj, false);
+
+        // JSONデータをファイルに保存
+        File.WriteAllText(_dataPath, json);
     }
 
 
@@ -401,6 +450,7 @@ public class InGameModel : MonoBehaviour
     {
         
         dataScore = 0;
+        //TODO:
         PlayerPrefs.SetInt(PlayerPrefsKeys.ScoreData, dataScore);
         score.Value = dataScore;
         Initialize();
