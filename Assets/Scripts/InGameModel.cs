@@ -75,6 +75,7 @@ public class InGameModel : MonoBehaviour
                 changedState.OnNext(indexAndstageStates);
             }
         }
+        //TODO:デシリアライズする
         DataHighScore = PlayerPrefs.GetInt(PlayerPrefsKeys.ScoreHighData);
         ApplyGameOverData();
     }
@@ -202,6 +203,7 @@ public class InGameModel : MonoBehaviour
         score.Value += cellValue * 2;
     }
 
+    //TODO:スコアデータをランキングデータとしてjsonファイルに格納する。
     public void CheckHighScore(int score)
     {
         if (score > DataHighScore) { 
