@@ -9,7 +9,7 @@ public class Result : MonoBehaviour
 
     private void Start()
     {
-        resultText.text = PlayerPrefs.GetInt(PlayerPrefsKeys.ScoreData, 0).ToString();
+        resultText.text = PlayerPrefs.GetInt(PlayerPrefsKeys.ScoreData).ToString();
     }
 
     public void OnClickRetryButton()

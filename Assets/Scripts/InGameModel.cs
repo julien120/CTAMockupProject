@@ -26,7 +26,7 @@ public class InGameModel : MonoBehaviour
     /// <summary>
     /// -スコアを管理
     /// </summary>
-    public int dataScore{ get; set; }
+    public int DataScore{ get; set; }
     public int DataHighScore = 0;
 
     /// <summary>
@@ -233,26 +233,27 @@ public class InGameModel : MonoBehaviour
     public void SetScore(int cellValue)
     {
         score.Value += cellValue * 2;
+        DataScore = score.Value;
     }
 
     //TODO:スコアデータをランキングデータとしてjsonファイルに格納する。
     public void CheckHighScore(int score)
     {
-        if (score > DataHighScore) {
-            DataHighScore = score;
-            //PlayerPrefs.SetInt(PlayerPrefsKeys.ScoreHighData, DataHighScore);
-            //highScore.Value = DataHighScore;
-            OnSave();
-            highScore.Value = DataHighScore;
-        }
+        //if (score > DataHighScore) {
+        //    DataHighScore = score;
+        //    //PlayerPrefs.SetInt(PlayerPrefsKeys.ScoreHighData, DataHighScore);
+        //    //highScore.Value = DataHighScore;
+        //    OnSave(DataHighScore);
+        //    highScore.Value = DataHighScore;
+        //}
     }
 
-    private void OnSave()
+    private void OnSave(int highScore)
     {
         // シリアライズするオブジェクトを作成
         var obj = new highScoreData
         {
-            DataHighScore = DataHighScore
+            DataHighScore = highScore
         };
 
         // JSON形式にシリアライズ
@@ -380,9 +381,9 @@ public class InGameModel : MonoBehaviour
     {
         if (IsGameOver())
         {
-
-            CheckHighScore(dataScore);
-            LoadRestartScene();
+            int score = DataScore;
+            CheckHighScore(score);
+            LoadRestartScene(score);
         }
     }
 
@@ -420,7 +421,7 @@ public class InGameModel : MonoBehaviour
             stageStates[row, column] = 0;
             stageStates[nextRow, nextCol] = value * 2;
             SetScore(value);
-            CheckHighScore(dataScore);
+            CheckHighScore(DataScore);
         }
         // 異なる値のときは移動処理を終了
         else if (value != nextValue)
@@ -440,19 +441,19 @@ public class InGameModel : MonoBehaviour
         isKeyOn = false;
     }
 
-    public void LoadRestartScene()
+    public void LoadRestartScene(int DataScore)
     {
-        PlayerPrefs.SetInt(PlayerPrefsKeys.ScoreData, dataScore);
+        PlayerPrefs.SetInt(PlayerPrefsKeys.ScoreData, DataScore);
         SceneController.Instance.LoadResultScene();
     }
 
     public void RestartGame()
     {
         
-        dataScore = 0;
+        DataScore = 0;
         //TODO:
-        PlayerPrefs.SetInt(PlayerPrefsKeys.ScoreData, dataScore);
-        score.Value = dataScore;
+        PlayerPrefs.SetInt(PlayerPrefsKeys.ScoreData, DataScore);
+        score.Value = DataScore;
         Initialize();
     }
 
