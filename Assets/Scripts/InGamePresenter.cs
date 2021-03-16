@@ -12,7 +12,8 @@ public class  InGamePresenter : MonoBehaviour
 {
     private InGameModel inGameModel;
     private InGameView inGameView;
-    [SerializeField] MenuWindowPresenter menuWindowPresenter;
+    [SerializeField] private RankingWindowPresenter rankingWindowPresenter;
+    [SerializeField] private MenuWindowPresenter menuWindowPresenter;
 
     public event Action OnOpenMenu;
 
@@ -36,11 +37,14 @@ public class  InGamePresenter : MonoBehaviour
         inGameModel.Initialize();
         inGameView.SetHighScore(inGameModel.DataHighScore);
 
-        //menuを開いたときの処理：キー入力禁止、リスタートボタンの実装        
-        menuWindowPresenter.Initialize();
+        //Restartmenuを開いたときの処理：キー入力禁止、リスタートボタンの実装        
+        menuWindowPresenter.Initialize(); 
         menuWindowPresenter.OnKeyOn.Subscribe(_ => inGameModel.CanInputKey());
         menuWindowPresenter.OnRestart.Subscribe(_ => inGameModel.RestartGame());
         inGameView.OnOpenMenu.Subscribe(_ => OpenMenu());
+
+        //rankingMenu
+        rankingWindowPresenter.SetRankingScore(inGameModel.DataHighScore);
     }
 
 

@@ -14,7 +14,7 @@ public class MenuWindowView : MonoBehaviour
     public IObservable<Unit> OnKeyOn => keyOn;
 
 
-    [SerializeField] GameObject menu;
+    [SerializeField] private GameObject menu;
 
     /// <summary>
     /// Windowを非表示にする

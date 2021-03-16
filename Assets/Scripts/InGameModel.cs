@@ -92,13 +92,13 @@ public class InGameModel : MonoBehaviour
         }
         //TODO:デシリアライズする
         //DataHighScore = PlayerPrefs.GetInt(PlayerPrefsKeys.ScoreHighData);
-        OnLoad();
+        OnLoadScoreData();
         ApplyGameOverData();
     }
 
 
 
-    private void OnLoad()
+    private void OnLoadScoreData()
     {
         // 念のためファイルの存在チェック
         if (!File.Exists(_dataPath)) return;
@@ -239,16 +239,17 @@ public class InGameModel : MonoBehaviour
     //TODO:スコアデータをランキングデータとしてjsonファイルに格納する。
     public void CheckHighScore(int score)
     {
-        //if (score > DataHighScore) {
-        //    DataHighScore = score;
-        //    //PlayerPrefs.SetInt(PlayerPrefsKeys.ScoreHighData, DataHighScore);
-        //    //highScore.Value = DataHighScore;
-        //    OnSave(DataHighScore);
-        //    highScore.Value = DataHighScore;
-        //}
+        if (score > DataHighScore)
+        {
+            DataHighScore = score;
+            //PlayerPrefs.SetInt(PlayerPrefsKeys.ScoreHighData, DataHighScore);
+            //highScore.Value = DataHighScore;
+            SaveScoreData(DataHighScore);
+            highScore.Value = DataHighScore;
+        }
     }
 
-    private void OnSave(int highScore)
+    private void SaveScoreData(int highScore)
     {
         // シリアライズするオブジェクトを作成
         var obj = new highScoreData
@@ -441,9 +442,9 @@ public class InGameModel : MonoBehaviour
         isKeyOn = false;
     }
 
-    public void LoadRestartScene(int DataScore)
+    public void LoadRestartScene(int dataScore)
     {
-        PlayerPrefs.SetInt(PlayerPrefsKeys.ScoreData, DataScore);
+        PlayerPrefs.SetInt(PlayerPrefsKeys.ScoreData, dataScore);
         SceneController.Instance.LoadResultScene();
     }
 
