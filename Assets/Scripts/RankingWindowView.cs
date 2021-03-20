@@ -39,7 +39,7 @@ public class RankingWindowView : MonoBehaviour
     public void SetRankingScore(int rankingScore)
     {
 
-        scoreText.text = $"RankingScore: {rankingScore}";
+        scoreText.text = $" {rankingScore}";
 
     }
 

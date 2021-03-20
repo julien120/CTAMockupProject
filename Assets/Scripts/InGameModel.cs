@@ -55,6 +55,7 @@ public class InGameModel : MonoBehaviour
     private struct highScoreData
     {
         public int DataHighScore;
+        public string User_name;
     }
 
     // ファイルパス
@@ -67,6 +68,7 @@ public class InGameModel : MonoBehaviour
     {
         // ファイルのパスを計算
         _dataPath = Path.Combine(Application.persistentDataPath, "highScore.json");
+        Debug.Log(Application.persistentDataPath);
 
         for (var i = 0; i < rowStage; i++)
         {
@@ -92,13 +94,13 @@ public class InGameModel : MonoBehaviour
         }
         //TODO:デシリアライズする
         //DataHighScore = PlayerPrefs.GetInt(PlayerPrefsKeys.ScoreHighData);
-        OnLoadScoreData();
+        LoadScoreData();
         ApplyGameOverData();
     }
 
 
 
-    private void OnLoadScoreData()
+    private void LoadScoreData()
     {
         // 念のためファイルの存在チェック
         if (!File.Exists(_dataPath)) return;
@@ -458,5 +460,4 @@ public class InGameModel : MonoBehaviour
         Initialize();
     }
 
-   
 }
