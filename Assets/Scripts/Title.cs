@@ -12,9 +12,16 @@ public class Title : MonoBehaviour
     [SerializeField] private Text startText;
     [SerializeField] private Text endText;
 
+    [SerializeField] private InputField userIdInputField;
+    [SerializeField] private InputField userNameInputField;
+
+
     private void Start()
     {
-        StartCoroutine(GetEventsInformation());
+        userIdInputField = userIdInputField.GetComponent<InputField>();
+        userNameInputField = userNameInputField.GetComponent<InputField>();
+
+       // StartCoroutine(GetEventsInformation());
     }
 
     /// <summary>
@@ -26,10 +33,10 @@ public class Title : MonoBehaviour
     /// </summary>
    //TODO:user_id問題
    //TODO:awaitで読み込んでからTitle開くとかやりたい
-    IEnumerator GetEventsInformation()
+    IEnumerator GetEventsInformation(string userId)
     {
-        Debug.Log("開始");
-        UnityWebRequest request = UnityWebRequest.Get(APIName.URI+APIName.RankingQuery+"?user_id=0");
+        //rubyだとwww_encodeみたいなのでqueryのハードコーディングを防ぐプロパティがあるけどunityはないんかな
+        UnityWebRequest request = UnityWebRequest.Get(APIName.URI+APIName.RankingQuery+ "?user_id=" + userId);
 
         //URLに接続して結果が戻ってくるまで待機
         yield return request.SendWebRequest();
@@ -62,6 +69,11 @@ public class Title : MonoBehaviour
     public void LoadInGameScene()
     {
         SceneController.Instance.LoadInGameScene();
+    }
+
+    public void addUserIdQuery()
+    {
+        StartCoroutine(GetEventsInformation(userIdInputField.text));
     }
 
 }
