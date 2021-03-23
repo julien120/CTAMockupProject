@@ -47,4 +47,19 @@ public class RankingWindowView : MonoBehaviour
     {
         window.SetActive(false);
     }
+
+    //TODO
+    //https://pacific-anchorage-24826.herokuapp.com /ranking をPOSTする
+    //requestBodyは以下の通り
+    //"user_id": "hogehoge",
+    //"user_name": "user_name",
+    //"score": highScore
+
+    //帰ってきた内容をforeachで一個ずつ取り出す。取り出した個数に合わせてelementを生成し、それぞれのtextに描画。
+    //intiateの第二引数で親要素を選択できた気がする。それでveatualGroupの空オブジェクト以下に設置する
+    public void SetRankingScore(string userId, string userName, int highScore )
+    {
+
+    }
+
 }

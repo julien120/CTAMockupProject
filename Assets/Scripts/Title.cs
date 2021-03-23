@@ -31,12 +31,11 @@ public class Title : MonoBehaviour
     ///  叩いたAPIをJSONにパースし、第一階層にあるname、start_time、end_timeを受け取る
     ///  Debug.Logに一旦描画する
     /// </summary>
-   //TODO:user_id問題
-   //TODO:awaitで読み込んでからTitle開くとかやりたい
+   //TODO:UniTaskで実装したい
     IEnumerator GetEventsInformation(string userId)
     {
         //rubyだとwww_encodeみたいなのでqueryのハードコーディングを防ぐプロパティがあるけどunityはないんかな
-        UnityWebRequest request = UnityWebRequest.Get(APIName.URI+APIName.RankingQuery+ "?user_id=" + userId);
+        UnityWebRequest request = UnityWebRequest.Get(APIName.URI+APIName.EventQuery+ "?user_id=" + userId);
 
         //URLに接続して結果が戻ってくるまで待機
         yield return request.SendWebRequest();
@@ -62,9 +61,6 @@ public class Title : MonoBehaviour
         startText.text = events.start_time;
         endText.text = events.end_time;
     }
-
-    
-
 
     public void LoadInGameScene()
     {
