@@ -6,8 +6,8 @@ using UnityEngine.UI;
 
 public class RankingWindowModel : MonoBehaviour
 {
-    public Ranking UserInfo = new Ranking();
-    [SerializeField] private Ranking ranking;
+    public UserData UserInfo = new UserData();
+   [SerializeField] private GameObject rankElementUI;
 
     // Start is called before the first frame update
     void Start()
@@ -35,9 +35,15 @@ public class RankingWindowModel : MonoBehaviour
     public void PostRankingScore()
     {
 
-        UserInfo.user_id = "name";
+        UserInfo.user_id = "name";//InputField.textを格納した変数を代入する
         UserInfo.user_name = "ジュリジュリ";
         UserInfo.score = 10;
+
+        //var obj = new highScoreData インスタンスしなくてもいけるっぽい？なんで？
+        //{
+        //    DataHighScore = highScore
+        //};
+
         string myjson = JsonUtility.ToJson(UserInfo);
         //UnityWebRequest request = UnityWebRequest.Post(APIName.URI + APIName.RankingQuery);
 
@@ -53,7 +59,7 @@ public class RankingWindowModel : MonoBehaviour
         request.SetRequestHeader("Content-Type", "application/json");
 
         //URLに接続して結果が戻ってくるまで待機
-        yield return request.Send();
+        yield return request.SendWebRequest();
 
 
 
@@ -67,8 +73,22 @@ public class RankingWindowModel : MonoBehaviour
         {
             //通信成功
             Debug.Log(request.downloadHandler.text);
-            Debug.Log(UserInfo.user_name);
-            
+            //デシリアライズ処理
+            RankingData rankingData = JsonUtility.FromJson<RankingData>(request.downloadHandler.text);
+
+            int count = 0;
+            foreach (UserRankingData i in rankingData.ranking)
+            {
+                
+                Debug.Log(rankingData.ranking[count].name);
+                Debug.Log(rankingData.ranking[count].rank);
+                Debug.Log(rankingData.ranking[count].score);
+                count++;
+
+                //後ほどMVPの分離と生成したelementへのアタッチをやる
+                //Instantiate(rankElementUI,);
+            }
+ 
         }
     }
 }
