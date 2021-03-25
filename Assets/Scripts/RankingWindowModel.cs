@@ -7,7 +7,12 @@ using UnityEngine.UI;
 public class RankingWindowModel : MonoBehaviour
 {
     public UserData UserInfo = new UserData();
+
+    //TODO:viewに後ほど移す予定
    [SerializeField] private GameObject rankElementUI;
+   [SerializeField] private Transform verticalScoreUI;
+   [SerializeField] private RankElementView rankElementView;
+    
 
     // Start is called before the first frame update
     void Start()
@@ -44,10 +49,10 @@ public class RankingWindowModel : MonoBehaviour
         //    DataHighScore = highScore
         //};
 
-        string myjson = JsonUtility.ToJson(UserInfo);
+        string userJson = JsonUtility.ToJson(UserInfo);
         //UnityWebRequest request = UnityWebRequest.Post(APIName.URI + APIName.RankingQuery);
 
-        StartCoroutine(GetEventsInformation(myjson));
+        StartCoroutine(GetEventsInformation(userJson));
     }
 
     IEnumerator GetEventsInformation(string myjson)
@@ -57,6 +62,9 @@ public class RankingWindowModel : MonoBehaviour
         request.uploadHandler = (UploadHandler)new UploadHandlerRaw(postData);
         request.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
         request.SetRequestHeader("Content-Type", "application/json");
+        //以上構文だと思っていた内容をメソッド分割し、またトークンを用意しているのがハッカソンのやつ
+        //ユーザー登録の処理は思ったよりベクトルが違うのかな?
+        //これが同じに見えない
 
         //URLに接続して結果が戻ってくるまで待機
         yield return request.SendWebRequest();
@@ -76,19 +84,18 @@ public class RankingWindowModel : MonoBehaviour
             //デシリアライズ処理
             RankingData rankingData = JsonUtility.FromJson<RankingData>(request.downloadHandler.text);
 
+            //TODO:0番目のインデックスをとるときだけ過去の叩いたjsonになったり、88888のままになったりするランクはずっと1
             int count = 0;
             foreach (UserRankingData i in rankingData.ranking)
             {
-                
-                Debug.Log(rankingData.ranking[count].name);
-                Debug.Log(rankingData.ranking[count].rank);
-                Debug.Log(rankingData.ranking[count].score);
-                count++;
-
                 //後ほどMVPの分離と生成したelementへのアタッチをやる
-                //Instantiate(rankElementUI,);
+                Instantiate(rankElementUI, verticalScoreUI,false);
+                rankElementView.RankScoreText.text = rankingData.ranking[count].score.ToString();
+                rankElementView.RankNameText.text = rankingData.ranking[count].name.ToString();
+                rankElementView.RankRankText.text = rankingData.ranking[count].rank.ToString();
+                count++;
             }
- 
+
         }
     }
 }
