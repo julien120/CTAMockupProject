@@ -244,8 +244,6 @@ public class InGameModel : MonoBehaviour
         if (score > DataHighScore)
         {
             DataHighScore = score;
-            //PlayerPrefs.SetInt(PlayerPrefsKeys.ScoreHighData, DataHighScore);
-            //highScore.Value = DataHighScore;
             SaveScoreData(DataHighScore);
             highScore.Value = DataHighScore;
         }

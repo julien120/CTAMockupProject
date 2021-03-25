@@ -12,6 +12,7 @@ public class  InGamePresenter : MonoBehaviour
 {
     private InGameModel inGameModel;
     private InGameView inGameView;
+    [SerializeField] private RankingWindowModel rankingWindowModel;
     [SerializeField] private RankingWindowPresenter rankingWindowPresenter;
     [SerializeField] private MenuWindowPresenter menuWindowPresenter;
 
@@ -21,6 +22,7 @@ public class  InGamePresenter : MonoBehaviour
     {
         inGameModel = GetComponent<InGameModel>();
         inGameView = GetComponent<InGameView>();
+       // rankingWindowModel = GetComponent<RankingWindowModel>();
 
         // Modelの値の変更を監視する
 
@@ -45,6 +47,8 @@ public class  InGamePresenter : MonoBehaviour
 
         //rankingMenu
         rankingWindowPresenter.SetRankingScore(inGameModel.DataHighScore);
+
+        rankingWindowModel.PostRankingScore(inGameModel.DataHighScore);
     }
 
 

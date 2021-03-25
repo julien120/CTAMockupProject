@@ -15,13 +15,14 @@ public class Title : MonoBehaviour
     [SerializeField] private InputField userIdInputField;
     [SerializeField] private InputField userNameInputField;
 
-
+    
     private void Start()
     {
         userIdInputField = userIdInputField.GetComponent<InputField>();
         userNameInputField = userNameInputField.GetComponent<InputField>();
+        
 
-       // StartCoroutine(GetEventsInformation());
+        // StartCoroutine(GetEventsInformation());
     }
 
     /// <summary>
@@ -49,7 +50,7 @@ public class Title : MonoBehaviour
         else
         {
             //通信成功
-            //Debug.Log(request.downloadHandler.text);
+            Debug.Log(request.downloadHandler.text);
             Events events = JsonUtility.FromJson<Events>(request.downloadHandler.text);
             DrawText(events);
         }
@@ -67,9 +68,15 @@ public class Title : MonoBehaviour
         SceneController.Instance.LoadInGameScene();
     }
 
-    public void addUserIdQuery()
+    public void AddUserIdQuery()
     {
         StartCoroutine(GetEventsInformation(userIdInputField.text));
+    }
+
+    public void SetUserData()
+    {
+        UserAccountData.UserId = userIdInputField.text;
+        UserAccountData.UserName = userNameInputField.text;
     }
 
 }

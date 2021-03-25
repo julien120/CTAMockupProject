@@ -12,19 +12,6 @@ public class RankingWindowModel : MonoBehaviour
    [SerializeField] private GameObject rankElementUI;
    [SerializeField] private Transform verticalScoreUI;
    [SerializeField] private RankElementView rankElementView;
-    
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        PostRankingScore();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
 
     //TODO
@@ -37,13 +24,14 @@ public class RankingWindowModel : MonoBehaviour
     //帰ってきた内容をforeachで一個ずつ取り出す。取り出した個数に合わせてelementを生成し、それぞれのtextに描画。
     //intiateの第二引数で親要素を選択できた気がする。それでveatualGroupの空オブジェクト以下に設置する
     //string userId, string userName, int highScoreを引数にする？
-    public void PostRankingScore()
+    public void PostRankingScore(int score)
     {
 
-        UserInfo.user_id = "name";//InputField.textを格納した変数を代入する
-        UserInfo.user_name = "ジュリジュリ";
-        UserInfo.score = 10;
+        UserInfo.user_id = UserAccountData.UserId;//InputField.textを格納した変数を代入する
+        UserInfo.user_name = UserAccountData.UserName;
+        UserInfo.score = score;
 
+        Debug.Log(UserAccountData.UserName);
         //var obj = new highScoreData インスタンスしなくてもいけるっぽい？なんで？
         //{
         //    DataHighScore = highScore
@@ -64,7 +52,6 @@ public class RankingWindowModel : MonoBehaviour
         request.SetRequestHeader("Content-Type", "application/json");
         //以上構文だと思っていた内容をメソッド分割し、またトークンを用意しているのがハッカソンのやつ
         //ユーザー登録の処理は思ったよりベクトルが違うのかな?
-        //これが同じに見えない
 
         //URLに接続して結果が戻ってくるまで待機
         yield return request.SendWebRequest();
@@ -80,7 +67,7 @@ public class RankingWindowModel : MonoBehaviour
         else
         {
             //通信成功
-            Debug.Log(request.downloadHandler.text);
+            //Debug.Log(request.downloadHandler.text);
             //デシリアライズ処理
             RankingData rankingData = JsonUtility.FromJson<RankingData>(request.downloadHandler.text);
 
