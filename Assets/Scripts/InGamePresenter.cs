@@ -46,9 +46,12 @@ public class  InGamePresenter : MonoBehaviour
         inGameView.OnOpenMenu.Subscribe(_ => OpenMenu());
 
         //rankingMenu
-        rankingWindowPresenter.SetRankingScore(inGameModel.DataHighScore);
+        //rankingWindowPresenter.SetRankingScore(inGameModel.DataHighScore);
 
-        rankingWindowModel.PostRankingScore(inGameModel.DataHighScore);
+        //TODO:ボタンを押した時に発火するようにする
+        rankingWindowPresenter.Initialize();
+        //rankingWindowModel.PostRankingScore(inGameModel.DataHighScore);
+        rankingWindowPresenter.PostRanking.Subscribe(_ => rankingWindowModel.PostRankingScore(inGameModel.DataHighScore));
     }
 
 

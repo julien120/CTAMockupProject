@@ -8,10 +8,11 @@ using UnityEngine.UI;
 public class RankingWindowView : MonoBehaviour
 {
     [SerializeField] private GameObject window;
-    [SerializeField] private Text scoreText;
+    //[SerializeField] private Text scoreText;
 
-    //private readonly Subject<Unit> drawRanking = new Subject<Unit>();
-    //public IObservable<Unit> DrawRanking => drawRanking;
+    private readonly Subject<Unit> drawRanking = new Subject<Unit>();
+    public IObservable<Unit> DrawRanking => drawRanking;
+
 
     // Start is called before the first frame update
     void Start()
@@ -32,16 +33,15 @@ public class RankingWindowView : MonoBehaviour
     public void OpenWindow()
     {
         window.SetActive(true);
-        
-        //drawRanking.OnNext(Unit.Default);
+        drawRanking.OnNext(Unit.Default);
     }
 
-    public void SetRankingScore(int rankingScore)
-    {
+    //public void SetRankingScore(int rankingScore)
+    //{
 
-        scoreText.text = $" {rankingScore}";
+    //    scoreText.text = $" {rankingScore}";
 
-    }
+    //}
 
     public void ClosedWindow()
     {
@@ -55,11 +55,5 @@ public class RankingWindowView : MonoBehaviour
     //"user_name": "user_name",
     //"score": highScore
 
-    //帰ってきた内容をforeachで一個ずつ取り出す。取り出した個数に合わせてelementを生成し、それぞれのtextに描画。
-    //intiateの第二引数で親要素を選択できた気がする。それでveatualGroupの空オブジェクト以下に設置する
-    public void SetRankingScore(string userId, string userName, int highScore )
-    {
-
-    }
 
 }
