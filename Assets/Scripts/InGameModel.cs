@@ -51,12 +51,7 @@ public class InGameModel : MonoBehaviour
 
 
     //highScoreDataをランキング化する
-    [System.Serializable]
-    private struct highScoreData
-    {
-        public int DataHighScore;
-        public string User_name;
-    }
+ 
 
     // ファイルパス
     private string _dataPath;
@@ -109,7 +104,7 @@ public class InGameModel : MonoBehaviour
         var json = File.ReadAllText(_dataPath);
 
         // JSON形式からオブジェクトにデシリアライズ
-        var obj = JsonUtility.FromJson<highScoreData>(json);
+        var obj = JsonUtility.FromJson<HighScoreData>(json);
 
         // Transformにオブジェクトのデータをセット
         DataHighScore = obj.DataHighScore;
@@ -252,7 +247,7 @@ public class InGameModel : MonoBehaviour
     private void SaveScoreData(int highScore)
     {
         // シリアライズするオブジェクトを作成
-        var obj = new highScoreData
+        var obj = new HighScoreData
         {
             DataHighScore = highScore
         };
