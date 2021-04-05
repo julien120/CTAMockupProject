@@ -54,8 +54,8 @@ public class Title : MonoBehaviour
         {
             //通信成功
             Debug.Log(request.downloadHandler.text);
-            Events events = JsonUtility.FromJson<Events>(request.downloadHandler.text);
-            DrawText(events);
+            var response = JsonConverter.Deserialize(request.downloadHandler.text);
+            DrawText(response);
         }
        }
     }

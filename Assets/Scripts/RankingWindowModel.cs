@@ -20,19 +20,13 @@ public class RankingWindowModel : MonoBehaviour
     //intiateの第二引数で親要素を選択できた気がする。それでverticalGroupの空オブジェクト以下に設置する
     public void PostRankingScore(int score)
     {
-
-        UserInfo.user_id = UserAccountData.UserId;//InputField.textを格納した変数を代入する
+        UserInfo.user_id = UserAccountData.UserId;/
         UserInfo.user_name = UserAccountData.UserName;
         UserInfo.score = score;
 
         Debug.Log(UserAccountData.UserName);
-        //var obj = new highScoreData インスタンスしなくてもいけるっぽい？なんで？
-        //{
-        //    DataHighScore = highScore
-        //};
 
-        string userJson = JsonUtility.ToJson(UserInfo);
-        //UnityWebRequest request = UnityWebRequest.Post(APIName.URI + APIName.RankingQuery);
+        string userJson = JsonConverter.Serialize(UserInfo);
 
         StartCoroutine(GetEventsInformation(userJson));
     }
@@ -44,8 +38,6 @@ public class RankingWindowModel : MonoBehaviour
         request.uploadHandler = (UploadHandler)new UploadHandlerRaw(postData);
         request.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
         request.SetRequestHeader("Content-Type", "application/json");
-        //以上構文だと思っていた内容をメソッド分割し、またトークンを用意しているのがハッカソンのやつ
-        //ユーザー登録の処理は思ったよりベクトルが違うのかな?
 
         //URLに接続して結果が戻ってくるまで待機
         yield return request.SendWebRequest();
