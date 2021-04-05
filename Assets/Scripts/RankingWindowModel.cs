@@ -20,7 +20,8 @@ public class RankingWindowModel : MonoBehaviour
     //intiateの第二引数で親要素を選択できた気がする。それでverticalGroupの空オブジェクト以下に設置する
     public void PostRankingScore(int score)
     {
-        UserInfo.user_id = UserAccountData.UserId;/
+        if (UserInfo.user_id == null) return;
+        UserInfo.user_id = UserAccountData.UserId;
         UserInfo.user_name = UserAccountData.UserName;
         UserInfo.score = score;
 
